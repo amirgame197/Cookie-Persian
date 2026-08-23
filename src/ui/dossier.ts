@@ -227,7 +227,7 @@ export class Dossier {
       line.innerHTML = `
         <div class="funnel-head"><span class="funnel-label">${escape(r.label)}</span><span class="funnel-val">${escape(r.value)}</span></div>
         <div class="funnel-bar"><span style="width:${Math.max(2, Math.min(100, r.pct * 100))}%"></span></div>
-        <div class="funnel-meta"><span>${pct} of people</span><span class="funnel-cum">1 in ${r.cumulative.toLocaleString()}</span></div>`;
+        <div class="funnel-meta"><span>${pct} کاربران</span><span class="funnel-cum">1 در ${r.cumulative.toLocaleString()}</span></div>`;
       host.append(line);
     }
   }

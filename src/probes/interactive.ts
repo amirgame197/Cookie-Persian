@@ -108,27 +108,27 @@ class BehaviorCapture {
    * like a chunky wheel, and flag `sure:false` when the evidence is thin.
    */
   private classifyPointer(): { type: string; why: string; sure: boolean } {
-    if (this.sawPen) return { type: 'stylus', why: 'pen pointer events', sure: true };
-    if (this.pointerType === 'touch') return { type: 'touchscreen', why: 'touch pointer events', sure: true };
+    if (this.sawPen) return { type: 'stylus', why: 'رویدادهای اشاره قلم', sure: true };
+    if (this.pointerType === 'touch') return { type: 'touchscreen', why: 'رویدادهای اشاره لمسی', sure: true };
 
-    if (this.wheels.length < 3) return { type: this.pointerType, why: 'barely scrolled, hard to tell', sure: false };
+    if (this.wheels.length < 3) return { type: this.pointerType, why: 'پیمایش بسیار کم بوده، تشخیص دشوار است', sure: false };
 
     const pixel = this.wheels.filter((w) => w.mode === 0);
     const lineMode = this.wheels.filter((w) => w.mode === 1);
-    if (!pixel.length && lineMode.length) return { type: 'mouse', why: 'line-mode wheel notches', sure: true };
+    if (!pixel.length && lineMode.length) return { type: 'mouse', why: 'چرخش اسکرول در حالت خطی', sure: true };
 
     const mags = pixel.map((w) => Math.abs(w.dy)).filter((x) => x > 0).sort((a, b) => a - b);
-    if (!mags.length) return { type: this.pointerType, why: 'no usable scroll deltas', sure: false };
+    if (!mags.length) return { type: this.pointerType, why: 'هیچ مقدار قابل استفاده‌ای برای پیمایش وجود ندارد', sure: false };
     const median = mags[Math.floor(mags.length / 2)];
     const anyFractional = pixel.some((w) => !Number.isInteger(w.dy));
     const distinct = new Set(pixel.map((w) => Math.abs(Math.round(w.dy)))).size;
 
     // macOS trackpads emit fractional pixel deltas, a dead giveaway.
-    if (anyFractional) return { type: 'trackpad', why: 'fractional, fine-grained scroll deltas', sure: true };
+    if (anyFractional) return { type: 'trackpad', why: 'مقادیر پیمایش کسری و بسیار دقیق', sure: true };
     // A mouse wheel: big deltas, very few distinct values (repeating notches).
-    if (median >= 90 && distinct <= 4) return { type: 'mouse', why: 'big, repeating wheel notches', sure: true };
+    if (median >= 90 && distinct <= 4) return { type: 'mouse', why: 'پله های بزرگ و تکرارشونده چرخ اسکرول', sure: true };
     // Everything else, small and/or varied, is a trackpad.
-    return { type: 'trackpad', why: 'small, varied scroll deltas', sure: median < 60 || distinct > 5 };
+    return { type: 'trackpad', why: 'مقادیر پیمایش کوچک و متنوع', sure: median < 60 || distinct > 5 };
   }
 
   // --- reading -------------------------------------------------------------

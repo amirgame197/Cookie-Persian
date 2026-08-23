@@ -66,19 +66,19 @@ export const incognitoProbe: Probe = {
           // InvalidStateError) we ignore rather than over-read.
           if (/unknown transient reason/i.test(msg) || e?.name === 'UnknownError') {
             isPrivate = true;
-            method = 'Safari: Origin Private File System unavailable';
+            method = 'سافاری: سیستم فایل خصوصی Origin در دسترس نیست';
           }
         }
       }
     }
 
     out.push(
-      sig('incognito.private', 'Likely private browsing', isPrivate, {
+      sig('incognito.private', 'احتمال خصوصی بودن این پنجره', isPrivate, {
         display: isPrivate ? `احتمالا (${method})` : attempted ? 'سیگنالی نیست' : 'در این مرورگر قابل بررسی نیست',
       }),
-      sig('incognito.method', 'Detection method', method),
-      sig('incognito.attempted', 'Detection attempted', attempted),
-      sig('incognito.quota', 'Storage quota (bytes)', quota, {
+      sig('incognito.method', 'حالت تشخیص', method),
+      sig('incognito.attempted', 'آیا تشخیص داده شد', attempted),
+      sig('incognito.quota', 'حداکثر حافظه ذخیره سازی (بایت)', quota, {
         display: quota != null ? `${Math.round(quota / (1024 * 1024))} مگابایت` : 'نامشخص',
         entropy: 2,
       }),

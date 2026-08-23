@@ -93,7 +93,7 @@ export function rarityFunnel(s: SignalMap): { rows: RarityRow[]; oneIn: number }
   }
 
   const dntOn = s['platform.dnt']?.value === '1' || s['platform.dnt']?.value === true || s['platform.gpc']?.value === true;
-  rows.push({ label: 'ردیابی نشوید', value: dntOn ? 'روشن (کمیاب)' : 'خاموش', pct: dntOn ? 0.1 : 0.9 });
+  rows.push({ label: 'ردیابی نشدن', value: dntOn ? 'روشن (کمیاب)' : 'خاموش', pct: dntOn ? 0.1 : 0.9 });
 
   // Compound into a running 1-in-N.
   let product = 1;

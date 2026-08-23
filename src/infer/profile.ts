@@ -225,20 +225,20 @@ export function personalityTheatre(s: SignalMap): Claim[] {
   // descriptor (no internal commas or "and") so any two combine as a readable
   // "you're X and Y" instead of a jumbled list.
   const PHRASES: Record<string, [string, string, string]> = {
-    Openness: ['methodical', 'focused', 'restlessly curious'],
-    Conscientiousness: ['breezy', 'organised', 'meticulous'],
-    Extraversion: ['reserved', 'measured', 'decisive'],
-    Agreeableness: ['blunt', 'easygoing', 'diplomatic'],
-    Neuroticism: ['unflappable', 'a little wired', 'on edge'],
+    Openness: ['روش مند', 'متمرکز', 'بی قرار و کنجکاو'],
+    Conscientiousness: ['راحت گیر', 'منظم', 'موشکاف'],
+    Extraversion: ['درون گرا', 'سنجیده', 'قاطع'],
+    Agreeableness: ['رک', 'خونسرد', 'دیپلماتیک'],
+    Neuroticism: ['خونسرد و آرام', 'کمی مضطرب', 'مضطرب و ناآرام'],
   };
   const tier = (x: number) => (x < 0.42 ? 0 : x < 0.66 ? 1 : 2);
 
   const scores = [
-    { key: 'Openness', score: clamp(openness) },
-    { key: 'Conscientiousness', score: clamp(consc) },
-    { key: 'Extraversion', score: clamp(extra) },
-    { key: 'Agreeableness', score: clamp(agree) },
-    { key: 'Neuroticism', score: clamp(neuro) },
+    { key: 'گشودگی', score: clamp(openness) },
+    { key: 'وظیفه شناسی', score: clamp(consc) },
+    { key: 'برون گرایی', score: clamp(extra) },
+    { key: 'توافق پذیری', score: clamp(agree) },
+    { key: 'روان رنجوری', score: clamp(neuro) },
   ];
   const traits: Record<string, string> = {};
   for (const { key, score } of scores) traits[key] = PHRASES[key][tier(score)];

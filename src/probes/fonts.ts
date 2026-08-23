@@ -235,7 +235,7 @@ export const fontProbe: Probe = {
     const fontsHash = hash(sorted.join('|'));
 
     return [
-      sig('fonts.list', 'Detected fonts', sorted, {
+      sig('fonts.list', 'فونت های تشخیص داده شده', sorted, {
         display: sorted.slice(0, 12).join(', ') + (sorted.length > 12 ? `، ${sorted.length - 12} تای دیگر` : ''),
         entropy: 6,
       }),

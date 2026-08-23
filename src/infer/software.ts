@@ -66,10 +66,10 @@ export const osFromFonts: Inference = (s) => {
     confidence: fontBased ? 'likely' : 'certain', act: 2, weight: 3,
     evidence: fontBased ? ['fonts.impliedOS'] : ['platform.ua', 'hw.touchPoints'],
     how: fontBased
-      ? `Certain fonts only exist on ${os}. They rendered, so that's what you're running, inferred from fonts, independent of whatever your User-Agent claims.`
+      ? `بعضی فونت ها فقط روی ${os} وجود دارند. این فونت ها در سیستم شما نمایش داده شدند، بنابراین نتیجه می‌گیریم که از ${os} استفاده میکنید. مستقل از هر چیزی که User-Agent شما ادعا می‌کند.`
       : isIpad
-        ? `${os} borrows macOS's fonts, so the font trick alone mistakes it for a Mac. The giveaway: a "Macintosh" user-agent paired with a touchscreen is an iPad, not a laptop.`
-        : `${os} borrows macOS's fonts, so the font trick alone would call this a Mac. Your User-Agent settles it — it still says iPhone.`,
+        ? `${os} از فونت‌های macOS استفاده میکند، بنابراین ترفند تشخیص فونت به تنهایی آن را با مک اشتباه میگیرد. نشانه تعیین کننده: ترکیب User-Agent حاوی مکینتاش با صفحه نمایش لمسی نشان میدهد که دستگاه یک آیپد است، نه لپ‌تاپ.`
+        : `${os} از فونت‌های macOS استفاده میکند، بنابراین ترفند تشخیص فونت به تنهایی آن را مک تشخیص میداد. User-Agent شما تکلیف را روشن میکند: همچنان می‌گوید آیفون.`,
   })];
 };
 
@@ -93,8 +93,8 @@ export const languagePacks: Inference = (s) => {
       out.push(claim({
         id: 'sw.langprefs',
         text: nonEnglish.length
-          ? `You've set your browser to prefer ${list(names)}, so you likely read ${list(nonEnglish)}.`
-          : `You've configured multiple language preferences: ${list(names)}.`,
+          ? `شما مرورگر خود را تنظیم کرده اید تا ${list(names)} را ترجیح دهد، پس احتمالاً ${list(nonEnglish)} میخوانید.`
+          : `شما چندین تنظیم زبانی را پیکربندی کرده اید: ${list(names)}.`,
         confidence: 'likely', act: 5, weight: 4,
         evidence: ['platform.languages'],
         how: `مرورگر شما در هر درخواست یک فهرست مرتب از زبان های مورد پسندتان (navigator.languages) میفرستد؛ خودتان تنظیمش کرده اید، پیش فرض نیست. سایت ها از آن حدس میزنند کجایی هستید و چه میخوانید.`,

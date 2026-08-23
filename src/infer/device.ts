@@ -143,8 +143,8 @@ export const peripherals: Inference = (s) => {
 
   if (exact) {
     const parts: string[] = [];
-    if (cams != null) parts.push(`*${cams}* camera${cams === 1 ? '' : 's'}`);
-    if (mics != null) parts.push(`*${mics}* microphone${mics === 1 ? '' : 's'}`);
+    if (cams != null) parts.push(`*${cams}* دوربین`);
+    if (mics != null) parts.push(`*${mics}* میکروفن`);
     if (!parts.length) return [];
     return [claim({
       id: 'device.peripherals',
@@ -157,8 +157,8 @@ export const peripherals: Inference = (s) => {
 
   // Presence only, which is all the browser will honestly tell us.
   const kinds: string[] = [];
-  if (cams) kinds.push('a camera');
-  if (mics) kinds.push('a microphone');
+  if (cams) kinds.push('دوربین');
+  if (mics) kinds.push('میکروفن');
   if (!kinds.length) return [];
   return [claim({
     id: 'device.peripherals',
