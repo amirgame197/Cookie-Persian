@@ -11,9 +11,9 @@ export const ACTS: Record<number, { label: string; invasive?: boolean }> = {
   5: { label: 'چیز هایی که نصب دارید' },
   6: { label: 'مسیر هایی که میتوانیم در دستگاه شما ببینیم', invasive: true },
   7: { label: 'جدای از دستگاه شما، خودتان چه هستید', invasive: true },
-  8: { label: 'چقدر ارزش دارید' },
-  9: { label: "قبلا با هم ملاقات داشته ایم" },
-  10: { label: 'رسید' },
+  8: { label: 'چقدر ارزش دارید؟' },
+  9: { label: "قبلا با هم ملاقات داشته ایم؟" },
+  10: { label: 'معنی همه این ها' },
 };
 
 const HEDGE: Record<Claim['confidence'], string> = {
@@ -213,7 +213,7 @@ export class Dossier {
   async rarityFunnel(rows: Array<{ label: string; value: string; pct: number; cumulative: number }>): Promise<void> {
     const el = document.createElement('section');
     el.className = 'act';
-    el.innerHTML = `<p class="act-label">چقدر شما را کمیاب میکند</p>
+    el.innerHTML = `<p class="act-label">چقدر شما را کمیاب میکند؟</p>
       <p class="claim likely" style="opacity:1;transform:none">هر چیزی به خودی خود رایج است. اما ببینید چقدر سریع تکثیر میشوند.</p>
       <div class="funnel"></div>`;
     this.root.append(el);

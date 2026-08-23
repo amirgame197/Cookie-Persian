@@ -36,7 +36,7 @@ const PASSIVE = [
 // the page's core claim that it asks for nothing. We never used its results.
 const INVASIVE = [localNetProbe, extProbe, webrtcProbe, permissionProbe];
 
-const TYPING_TARGET = 'روباه زرنگ قهوه‌ای از سگ تنبل جلو زد';
+const TYPING_TARGET = 'روباه زرنگ قهوه‌ای از سگ تنبل جلو زد!';
 
 /** Pull the edge context and fold it into the signal map under `edge.*`. */
 async function loadEdge(signals: SignalMap): Promise<void> {
@@ -146,7 +146,7 @@ async function main() {
   scan.remove();
   const invasiveClaims = inferAll(signals).filter((c) => c.act === 6);
   if (invasiveClaims.length) {
-    dossier.section('<p class="claim likely">حالا چیز های پر اهمیت تر، و دقت کنید هیج سوالی از شما نپرسیدیم. هیچ جای دیگری هم این کار را نخواهد کرد.</p>');
+    dossier.section('<p class="claim likely">حالا چیز های پر اهمیت تر، و دقت کنید هیج سوالی از شما نپرسیدیم! هیچ جای دیگری هم این کار را نخواهد کرد.</p>');
     for (const c of invasiveClaims) await dossier.reveal(c, signals);
   }
 
