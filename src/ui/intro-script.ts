@@ -20,7 +20,7 @@ export function buildIntroSegments(signals: SignalMap, gather: Promise<unknown>)
     'خبر های بدی دارم.',
     "مرورگرهای مدرن تقریبا دیگر به *کوکی* نیاز ندارند.",
     'این صفحه *صفر* کوکی تنظیم کرده است. *هیچ مجوزی* درخواست نکرده است. شما روی *هیچ چیزی* کلیک نکرده‌اید.',
-    'و با این حال.',
+    'و با این حال...',
   );
 
   // Lazy: wait for the probes, then narrate the machine we found.
@@ -115,7 +115,7 @@ function specLines(s: SignalMap): string[] {
   // A VM gets no spec brag, the fact that it's fake IS the punchline.
   if (tier === 'vm') return [`صبر کن... این اصلا یک سخت افزار واقعی نیست! این یک *ماشین مجازی*‌ست. پس با همین پیش میرویم.`];
 
-  const out: string[] = [`به هرحال، دستگاه خوبی دارید: *${headline}*.`];
+  const out: string[] = [`دستگاه خوبی دارید: *${headline}*.`];
 
   // Graphics first (per the brag order), then cores, screen, resolution.
   const bits: string[] = [];
@@ -123,18 +123,18 @@ function specLines(s: SignalMap): string[] {
   if (gpuName && !/apple m/i.test(headline)) bits.push(gpuName);
   // Browsers cap/round hardwareConcurrency (Firefox tops out, Safari and
   // resistFingerprinting under-report hard), so we never state it as fact.
-  if (cores) bits.push(`${cores} هسته پردازنده که اعتراف گر`);
-  if (hz && hz >= 118) bits.push(`یک نمایشگر ${hz} هرتزی ${/apple|iphone|ipad|mac/i.test(ua) ? '(ProMotion)' : ''}`);
-  if (phys) bits.push(`با اندازه ${phys[0]}×${phys[1]}`);
+  if (cores) bits.push(`${cores} هسته پردازنده`);
+  if (hz && hz >= 118) bits.push(`که اعتراف گر یک نمایشگر ${hz} هرتزی ${/apple|iphone|ipad|mac/i.test(ua) ? '(ProMotion)' : ''}`);
+  if (phys) bits.push(`با اندازه ${phys[0]}×${phys[1]} است`);
 
   if (bits.length >= 2) {
     const closer = tier === 'high' ? 'همه امکانات خاص و جذاب.' : tier === 'low' ? 'صادقانه، تمام تلاشش را میکند.' : 'یک سیستم کاملاً توانمند.';
     out.push(`${cap(list(bits))}. ${closer}`);
   } else if (bits.length === 1) {
-    out.push(`${cap(bits[0])}, no less.`);
+    out.push(`${cap(bits[0])}، و نه کمتر.`);
   }
 
-  if (tier === 'high') out.push("ولی یکم گران نبود؟");
+  if (tier === 'high') out.push("اما یکم گران نبود؟");
   else if (tier === 'low') out.push("یه ذره قدیمی، شاید زمان آپگرید کردن رسیده، اما در این اوضاع اقتصادی...");
 
   return out;
@@ -199,7 +199,7 @@ function prettyGpu(raw: string): string {
 
 function list(items: string[]): string {
   if (items.length === 1) return items[0];
-  if (items.length === 2) return `${items[0]} and ${items[1]}`;
-  return `${items.slice(0, -1).join(', ')}, and ${items[items.length - 1]}`;
+  if (items.length === 2) return `${items[0]} و ${items[1]}`;
+  return `${items.slice(0, -1).join('، ')}، و ${items[items.length - 1]}`;
 }
 function cap(s: string): string { return s.charAt(0).toUpperCase() + s.slice(1); }

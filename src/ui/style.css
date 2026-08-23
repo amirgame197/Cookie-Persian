@@ -34,6 +34,10 @@ html, body {
   line-height: 1.5;
   /* wide content scrolls inside its own box; the page itself never does */
   overflow-x: hidden;
+  
+  /* persian alignment fix */
+  text-align: right;
+  unicode-bidi: plaintext;
 }
 
 body {

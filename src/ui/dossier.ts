@@ -6,7 +6,7 @@ export const ACTS: Record<number, { label: string; invasive?: boolean }> = {
   0: { label: '' },
   1: { label: 'موقعیت مکانی شما' },
   2: { label: 'دستگاهی که از آن استفاده میکنید' },
-  3: { label: 'آنچه دستگاه شما دارد' },
+  3: { label: 'آنچه در دستگاه شماست' },
   4: { label: "موارد غیر منتظره!" },
   5: { label: 'چیز هایی که نصب دارید' },
   6: { label: 'مسیر هایی که میتوانیم در دستگاه شما ببینیم', invasive: true },
@@ -213,8 +213,8 @@ export class Dossier {
   async rarityFunnel(rows: Array<{ label: string; value: string; pct: number; cumulative: number }>): Promise<void> {
     const el = document.createElement('section');
     el.className = 'act';
-    el.innerHTML = `<p class="act-label">چقدر شما را کم یاب میکند</p>
-      <p class="claim likely" style="opacity:1;transform:none">هر چیزی به خودی خود رایج است. ببینید چقدر سریع تکثیر میشوند.</p>
+    el.innerHTML = `<p class="act-label">چقدر شما را کمیاب میکند</p>
+      <p class="claim likely" style="opacity:1;transform:none">هر چیزی به خودی خود رایج است. اما ببینید چقدر سریع تکثیر میشوند.</p>
       <div class="funnel"></div>`;
     this.root.append(el);
     const host = el.querySelector('.funnel')!;
@@ -243,7 +243,7 @@ export class Dossier {
       : '';
     el.innerHTML = `
       <p class="act-label">چقدر ارزش دارید</p>
-      <p class="claim likely" style="opacity:1;transform:none">هر صفحه تبلیغاتی که باز میکنید، شما را در عرض حدود یک دهم ثانیه به ده‌ ها پیشنهاد دهنده پیشنهاد میدهد. این پیام واقعی است که شما را توصیف می‌کند، که همین الان، از داده‌های واقعی شما، در قالب واقعی (OpenRTB 2.6) ساخته شده است:</p>
+      <p class="claim likely" style="opacity:1;transform:none">هر صفحه تبلیغاتی که باز میکنید، شما را در عرض حدود یک دهم ثانیه به ده‌ ها پیشنهاد دهنده پیشنهاد میدهد. این یک نمونه پیام واقعی است که شما را توصیف می‌کند، که همین الان، از داده‌های واقعی شما، در قالب واقعی (OpenRTB 2.6) ساخته شده است:</p>
       <pre class="raw json-receipt">${escape(json)}</pre>
       <p class="how" style="border:0;margin:.4rem 0 1.4rem;padding:0">همه چیز اینجا واقعی است، به جز <b>user.data.segment</b>. اینجاست که یک دلال داده، علایق استنباطی شما (مثلاً "در بازار خودرو"، "والدین جدید"، "دارنده کارت") را ضمیمه میکند. ما نمی‌توانیم علایق شما را نشان دهیم چون ما خریدار نیستیم. پیشنهاد دهندگان می‌توانند.</p>
       ${pixelHtml}

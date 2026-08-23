@@ -198,7 +198,7 @@ function renderFinale(dossier: Dossier, signals: SignalMap, fingerprint: string,
   const el = dossier.section(`
     <p class="verdict">اثر انگشت دستگاه شما، در این بازدید:</p>
     <p class="fingerprint">${fingerprint}</p>
-    <p class="how" style="border:0;margin:0 0 2rem;padding:0">${bits.toFixed(1)} بیت واحد، متصل شده از ${Object.keys(signals).length} عدد سیگنال</p>
+    <p class="how" style="border:0;margin:0 0 2rem;padding:0">${bits.toFixed(1)} بیت واحد، ساخته شده از ${Object.keys(signals).length} عدد سیگنال</p>
     <p><button class="go" id="raw-btn">اطلاعات خالص را به من نشان بده</button>
        <button class="go ghost" id="forget-btn" style="margin-left:.6rem">مرا فراموش کن</button></p>
     <div id="raw-wrap" hidden><table class="raw"><tbody>${rows}</tbody></table></div>
@@ -210,7 +210,7 @@ function renderFinale(dossier: Dossier, signals: SignalMap, fingerprint: string,
       و البته این نسخه دست و پا چلفتی و بدون کوکی است: سایتی که کوکی تنظیم میکند میتواند حدس های اشتباه را به مرور زمان اصلاح کند، 
       و هر جایی که وارد سیستم میشوید یا پرداخت می‌کنید، هرگز مجبور به حدس زدن نیست.
       <br><br>ترجمه شده توسط <a href="https://github.com/amirgame197" target="_blank" rel="noopener">amir</a> (<a href="https://github.com/amirgame197/Cookie-Persian" target="_blank" rel="noopener">مشاهده پروژه</a>)
-      <br>مشاهده <a href="https://github.com/Kuberwastaken/cookie" target="_blank" rel="noopener">نسخه انگلیسی پروژه کوکی.</a>
+      <br>مشاهده <a href="https://github.com/Kuberwastaken/cookie" target="_blank" rel="noopener">نسخه انگلیسی پروژه کوکی</a>.
     </p>
   `);
 
@@ -221,7 +221,7 @@ function renderFinale(dossier: Dossier, signals: SignalMap, fingerprint: string,
   el.querySelector('#forget-btn')?.addEventListener('click', async () => {
     await forget();
     const btn = el.querySelector('#forget-btn')!;
-    btn.textContent = 'Forgotten, reload to confirm';
+    btn.textContent = 'فراموش شدی، صفحه را رفرش کن';
     (btn as HTMLButtonElement).disabled = true;
   });
 }
