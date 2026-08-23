@@ -240,5 +240,5 @@ function esc(s: string): string {
 
 main().catch((err) => {
   const root = document.getElementById('dossier');
-  if (root) root.innerHTML = `<p class="claim">چیزی هنگام خواندن دستگاه شما اشتباه پیش رفت. از قضا، این نتیجه‌ی آن است. <span class="how">${esc(String(err))}</span></p>`;
+  if (root) root.innerHTML = `<p class="claim">چیزی هنگام خواندن دستگاه شما اشتباه پیش رفت. از قضا، این نتیجه‌ی آن است: <span class="how">${esc(String(err))}</span></p>`;
 });

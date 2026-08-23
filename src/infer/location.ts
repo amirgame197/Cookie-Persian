@@ -178,7 +178,7 @@ const COLO: Record<string, string> = {
 };
 
 function to12h(h: number, min: string): string {
-  const ampm = h >= 12 ? 'p.m.' : 'a.m.';
+  const ampm = h >= 12 ? 'بعد از ظهر' : 'صبح';
   const h12 = h % 12 === 0 ? 12 : h % 12;
   return `${h12}:${min} ${ampm}`;
 }
