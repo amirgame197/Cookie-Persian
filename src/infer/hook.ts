@@ -92,7 +92,6 @@ export const referrerHook: Inference = (s) => {
     how: `هر لینکی که میزنید، صفحه ای که ترک کردید را در هدر Referer میفرستد و document.referrer آن را به هر اسکریپتی میدهد. تقریبا کسی نگاهش نمیکند. ما قبل از هرچیز خواندیمش، برای همین خط اول است.`,
   }];
 };
-
 export const deviceHook: Inference = (s) => {
   const ua = str(s, 'platform.ua');
   const gpu = str(s, 'gpu.renderer').toLowerCase();
@@ -102,41 +101,41 @@ export const deviceHook: Inference = (s) => {
   const res = s['display.resolution']?.value as [number, number] | undefined;
   const minDim = res ? Math.min(res[0], res[1]) : 0;
   const ev = ['gpu.renderer', 'hw.cores', 'platform.ua', 'display.resolution'];
-  const HOW = `We read your GPU string, CPU core count, screen and platform in the first frame, enough to size up your hardware before you'd scrolled a pixel. It's a vibe, not a spec sheet, so don't @ us.`;
+  const HOW = `ما در اولین فریم، رشته GPU، تعداد هسته های CPU، صفحه‌نمایش و پلتفرم شما را خواندیم. برای اینکه قبل از اینکه حتی یک پیکسل اسکرول کنید، سخت‌افزارتان را ارزیابی کنیم کافی است. این بیشتر یک برداشت کلی است تا مشخصات فنی، پس بهمان گیر ندید.`;
   const H = (t: string) => hook(t, HOW, ev);
 
   // 0) Not real hardware.
   if (/swiftshader|llvmpipe|vmware|virtualbox|parallels|basic render|microsoft basic/.test(gpu)) {
-    return [H(`Hold on, this isn't real hardware. You're in a *virtual machine* or a headless browser. Respect the hustle, but I see you.`)];
+    return [H(`صبر کنید، این سخت‌افزار واقعی نیست. شما داخل یک *ماشین مجازی* یا مرورگر بدون رابط گرافیکی هستید. تلاشتان قابل احترام است، ولی متوجه شدم.`)];
   }
 
   // 1) iPhone / iPad.
   if (/iPhone/.test(ua)) {
     // Small logical width ⇒ older/SE-class device.
     if (minDim && minDim <= 375) {
-      return [H(`That is an *ancient iPhone*. It still boots, which is honestly more than I expected. Museum-adjacent.`)];
+      return [H(`این یک *آیفون عهد بوقی* است. هنوز روشن میشود، که واقعا بیشتر از چیزی است که انتظار داشتم. در حد موزه است.`)];
     }
     if (minDim && minDim >= 428) {
-      return [H(`An *iPhone Pro Max*. The big one. Compensating for nothing, I'm sure.`)];
+      return [H(`یک *آیفون پرو مکس*. مدل بزرگه. مطمئنم برای جبران کردن چیز خاصی نیست.`)];
     }
-    return [H(`An *iPhone*. Of course it is. Predictable, expensive, fine.`)];
+    return [H(`یک *آیفون*. معلومه. قابل پیش بینی، گران، خوب.`)];
   }
   if (/iPad/.test(ua)) {
-    return [H(`You opened this on an *iPad*. Browsing the real web on a tablet, living dangerously, I respect it.`)];
+    return [H(`این را روی یک *آیپد* باز کرده اید. با یک تبلت وارد وب واقعی شده اید؛ خطرناک زندگی میکنید، احترام میگذارم.`)];
   }
 
   // 2) Android, with taste-based exceptions.
   if (/Android/.test(ua)) {
     if (/SM-/.test(model) || /SamsungBrowser/.test(ua) || /samsung/i.test(model)) {
-      return [H(`*Samsung?* Okay, a person of taste. Unexpected, but I respect it.`)];
+      return [H(`*سامسونگ؟* خب، آدم باسلیقه ای هستید. غیرمنتظره بود، ولی احترام میگذارم.`)];
     }
     if (/Pixel/i.test(model)) {
-      return [H(`A *Pixel*. The Android for people who are quietly ashamed of Android. Clever.`)];
+      return [H(`یک *پیکسل*. اندرویدِ آدم هایی که در سکوت از اندرویدی بودنشان کمی خجالت میکشند. باهوش.`)];
     }
     if (/Adreno\s*7|Adreno\s*8|Mali-G7|Mali-G8|immortalis/i.test(gpu)) {
-      return [H(`A *flagship Android*. Powerful. Still Android. We contain multitudes.`)];
+      return [H(`یک *اندروید پرچمدار* و قدرتمند. هنوز اندروید است. ما موجودات چندوجهی هستیم.`)];
     }
-    return [H(`Ew, you opened this on an *Android*? …okay. I guess. No judgement. (Some judgement.)`)];
+    return [H(`اَه، این را روی یک *اندروید* باز کردید؟ …باشه. فکر کنم قضاوت نخواهم کرد. (کمی میکنم.)`)];
   }
 
   // 3) Mac, or an iPad wearing the desktop "Macintosh" UA. Safari masks the
@@ -146,26 +145,26 @@ export const deviceHook: Inference = (s) => {
     const mac = classifyMacintosh(s);
     const M = (t: string) => hook(t, HOW, [...ev, ...MAC_EVIDENCE]);
     if (mac.kind === 'ipad') {
-      return [M(`An *iPad* pretending to be a Mac. The desktop user-agent was a nice try, but Macs don't have touchscreens.`)];
+      return [M(`یک *آیپد* که خودش را جای مک جا زده. User-Agent دسکتاپ تلاش خوبی بود، ولی مک ها صفحه نمایش لمسی ندارند.`)];
     }
     if (mac.kind === 'apple-silicon' && mac.chip) {
       const highEnd = /pro|max|ultra/i.test(mac.chip);
       return [M(highEnd
-        ? `*Nice machine.* Apple ${mac.chip}, that's the expensive one. Taste and disposable income, a lethal combo.`
-        : `*Nice machine.* Apple Silicon (${mac.chip}). Tasteful. Slightly smug. It suits you.`)];
+        ? `*چه دستگاه خوبی.* اپل ${mac.chip}، همان مدل گران‌قیمت است. سلیقه و درآمد قابل‌خرج؛ ترکیب خطرناکی است.`
+        : `*چه دستگاه خوبی.* اپل سیلیکون (${mac.chip}). باسلیقه. کمی از خودراضی. به شما میاید.`)];
     }
     if (mac.kind === 'apple-silicon') {
-      return [M(`*Nice machine.* Apple Silicon. Your browser hides which chip, but the CPU itself told on you.`)];
+      return [M(`*چه دستگاه خوبی.* اپل سیلیکون. مرورگرتان پنهان میکند کدام چیپ است، ولی خود پردازنده شما را لو داد.`)];
     }
     if (mac.kind === 'intel') {
-      return [M(`An *Intel Mac*. You've held onto this one a while, haven't you? Loyalty, or inertia, either way, respect.`)];
+      return [M(`یک *مک اینتل*. مدتی است این یکی را نگه داشته اید، نه؟ وفاداری یا صرفا عادت، در هر صورت محترم است.`)];
     }
-    return [M(`A *Mac*. Beyond that it's keeping quiet, which, honestly, fair.`)];
+    return [M(`یک *مک*. بیشتر از این چیزی بروز نمیدهد که، راستش، قابل درک است.`)];
   }
 
   // 4) ChromeOS.
   if (/CrOS/.test(ua)) {
-    return [H(`A *Chromebook*. Bold. Frugal. Bold. We'll make it work.`)];
+    return [H(`یک *کروم بوک*. جسورانه. اقتصادی. جسورانه. کاری میکنید که جواب بدهد.`)];
   }
 
   // 5) Windows and other desktop, tier by GPU, then CPU.
@@ -176,21 +175,21 @@ export const deviceHook: Inference = (s) => {
 
   if (gaming || (isWindows && cores >= 12)) {
     const card = (gpu.match(/(rtx\s*\d{3,4}\s*(ti)?|radeon\s*rx\s*\d{3,4}\s*(xt)?)/i)?.[0] || '').toUpperCase().replace(/\s+/g, ' ').trim();
-    return [H(`Okay, *nice rig*.${card ? ` That ${card} isn't for spreadsheets` : ` That's a gaming machine`}, and we both know it.${hz >= 120 ? ` A ${hz}Hz screen too. Show-off.` : ''}`)];
+    return [H(`خب، *سیستم خفنی ست*.${card ? ` اون ${card} برای اکسل و این چیزها ساخته نشده` : ` این یک سیستم گیمینگ است` }، و هر دومان این را میدانیم.${hz >= 120 ? ` نمایشگر ${hz}هرتزی هم دارید. چه خودنمایی ای.` : ''}`)];
   }
   if (isWindows && weakGpu && cores <= 4) {
-    return [H(`Wow. This is an *old machine*, or the work laptop IT handed you in 2018. Either way, my condolences.`)];
+    return [H(`واو. این یک *دستگاه قدیمی* است، یا همان لپ‌تاپ کاری‌ای که واحد IT در سال ۲۰۱۸ تحویلتان داده. در هر صورت، تسلیت میگویم.`)];
   }
   if (midGpu) {
-    return [H(`A perfectly *respectable PC*. Not a beast, not a potato. The Toyota Corolla of computers.`)];
+    return [H(`یک *کامیپوتر کاملاً قابل‌احترام*. نه هیولاست، نه سیب زمینی. تویوتا کرولای کامپیوترهاست.`)];
   }
   if (/Linux|X11/.test(ua)) {
-    return [H(`*Linux* on the desktop. Of course it is. We're genuinely honored, say hi to your window manager.`)];
+    return [H(`*لینوکس* روی دسکتاپ. معلومه که همینه. واقعا مفتخریم؛ به مدیر پنجره تان سلام برسانید.`)];
   }
   if (isWindows) {
-    return [H(`A *Windows PC*. The people's choice. Statistically, this is most of you, and that's beautiful.`)];
+    return [H(`یک *کامپیوتر ویندوزی*. انتخاب همگان. از نظر آماری، بیشتر شما همین را دارید، و این زیباست.`)];
   }
 
   // 6) Fallback.
-  return [H(`Some kind of machine. Unusual enough that I can't place it at a glance, which is its own kind of flex.`)];
+  return [H(`یک نوع دستگاه. آن قدر غیرمعمول است که در یک نگاه نمیتوانم تشخیصش بدهم، که خودش نوعی خودنمایی محسوب می‌شود.`)];
 };

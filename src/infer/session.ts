@@ -15,7 +15,7 @@ export const trackingHypocrisy: Inference = (s) => {
   const gpc = s['platform.gpc']?.value === true;
   const on = dnt === '1' || dnt === 'yes' || dnt === true || gpc;
   if (!on) return [];
-  const which = gpc && dnt === '1' ? 'Do Not Track and Global Privacy Control' : gpc ? 'Global Privacy Control' : 'Do Not Track';
+  const which = gpc && dnt === '1' ? 'عدم ردیابی و کنترل حریم خصوصی جهانی' : gpc ? 'کنترل حریم خصوصی جهانی' : 'عدم ردیابی';
   return [claim({
     id: 'ses.dnt',
     text: `*${which}* را روشن کرده اید و از سایت ها میخواهید ردیابی تان نکنند. درخواست را دیدیم. نادیده گرفتیم. تقریبا همه همین کار را میکنند.`,
