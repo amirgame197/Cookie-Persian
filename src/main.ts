@@ -36,7 +36,7 @@ const PASSIVE = [
 // the page's core claim that it asks for nothing. We never used its results.
 const INVASIVE = [localNetProbe, extProbe, webrtcProbe, permissionProbe];
 
-const TYPING_TARGET = 'the quick brown fox jumps over the lazy dog';
+const TYPING_TARGET = 'روباه زرنگ قهوه‌ای از سگ تنبل جلو زد';
 
 /** Pull the edge context and fold it into the signal map under `edge.*`. */
 async function loadEdge(signals: SignalMap): Promise<void> {
@@ -50,13 +50,13 @@ async function loadEdge(signals: SignalMap): Promise<void> {
       if (value != null && value !== '') signals[id] = { id, label, value };
     };
     put('edge.ip', 'IP address', ctx.ip);
-    put('edge.city', 'City (from IP)', ctx.city);
-    put('edge.region', 'Region (from IP)', ctx.region);
-    put('edge.country', 'Country (from IP)', ctx.country);
-    put('edge.postalCode', 'Postal code (from IP)', ctx.postalCode);
+    put('edge.city', 'City (از آیپی)', ctx.city);
+    put('edge.region', 'Region (از آیپی)', ctx.region);
+    put('edge.country', 'Country (از آیپی)', ctx.country);
+    put('edge.postalCode', 'Postal code (از آیپی)', ctx.postalCode);
     put('edge.latitude', 'Latitude', ctx.latitude);
     put('edge.longitude', 'Longitude', ctx.longitude);
-    put('edge.timezone', 'Timezone (from IP)', ctx.timezone);
+    put('edge.timezone', 'Timezone (از آیپی)', ctx.timezone);
     put('edge.asn', 'ASN', ctx.asn);
     put('edge.asOrg', 'Network operator', ctx.asOrganization);
     put('edge.colo', 'Edge datacenter', ctx.colo);
@@ -87,22 +87,22 @@ async function clientGeoFallback(signals: SignalMap): Promise<void> {
     const put = (id: string, label: string, value: unknown) => {
       if (value != null && value !== '') signals[id] = { id, label, value };
     };
-    put('edge.ip', 'IP address', d.ip);
-    put('edge.city', 'City (from IP)', d.city);
-    put('edge.region', 'Region (from IP)', d.region);
-    put('edge.country', 'Country (from IP)', d.country_code);
-    put('edge.postalCode', 'Postal code (from IP)', d.postal);
-    put('edge.latitude', 'Latitude', d.latitude);
-    put('edge.longitude', 'Longitude', d.longitude);
-    put('edge.timezone', 'Timezone (from IP)', d.timezone?.id);
-    put('edge.asn', 'ASN', d.connection?.asn);
+    put('edge.ip', 'آدرس آیپی', d.ip);
+    put('edge.city', 'شهر (از آیپی)', d.city);
+    put('edge.region', 'استان (از آیپی)', d.region);
+    put('edge.country', 'کشور (از آیپی)', d.country_code);
+    put('edge.postalCode', 'کد پستی (از آیپی)', d.postal);
+    put('edge.latitude', 'عرض جغرافیایی', d.latitude);
+    put('edge.longitude', 'طول جغرافیایی', d.longitude);
+    put('edge.timezone', 'منطقه زمانی (از آیپی)', d.timezone?.id);
+    put('edge.asn', 'شماره شبکه', d.connection?.asn);
     // Prefer a real name; ipwho.is sometimes returns "Internet Service Provider".
     const generic = /^(internet service provider|isp|unknown|n\/?a|none|-)$/i;
     const org = d.connection?.org as string | undefined;
     const isp = d.connection?.isp as string | undefined;
     const netName = org && !generic.test(org.trim()) ? org : isp && !generic.test(isp.trim()) ? isp : undefined;
-    put('edge.asOrg', 'Network operator', netName);
-    signals['edge.__source'] = { id: 'edge.__source', label: 'Geo source', value: 'client-side IP lookup (ipwho.is)' };
+    put('edge.asOrg', 'اوپراتور اینترنت', netName);
+    signals['edge.__source'] = { id: 'edge.__source', label: 'منبع جغرافیایی', value: 'برسی آیپی از طریق کلاینت' };
   } catch { /* offline or blocked, location act just gets skipped */ }
 }
 
@@ -134,7 +134,7 @@ async function main() {
 
   // Act 6: the invasive probes run automatically, no gate. The whole thesis is
   // that sites do this WITHOUT asking, so we do too, and say so out loud.
-  const scan = dossier.scanning('Scanning your machine, open ports, real IP, granted permissions, paired devices');
+  const scan = dossier.scanning('درحال برسی دستگاه، پورت ها، آیپی واقعی، دسترسی های داده شده و دستگاه های متصل');
   // Hard ceiling: on iOS Safari the port scan and WebRTC gathering can hang
   // indefinitely, which used to strand the page here. Whatever has finished by
   // the deadline is what we use; the rest of the story always continues.
@@ -146,7 +146,7 @@ async function main() {
   scan.remove();
   const invasiveClaims = inferAll(signals).filter((c) => c.act === 6);
   if (invasiveClaims.length) {
-    dossier.section('<p class="claim likely">Now the louder stuff, and notice we never asked you. Neither will anyone else.</p>');
+    dossier.section('<p class="claim likely">حالا چیز های پر اهمیت تر، و دقت کنید هیج سوالی از شما نپرسیدیم. هیچ جای دیگری هم این کار را نخواهد کرد.</p>');
     for (const c of invasiveClaims) await dossier.reveal(c, signals);
   }
 
@@ -196,24 +196,21 @@ function renderFinale(dossier: Dossier, signals: SignalMap, fingerprint: string,
     .join('');
 
   const el = dossier.section(`
-    <p class="verdict">Your device fingerprint, this visit:</p>
+    <p class="verdict">اثر انگشت دستگاه شما، در این بازدید:</p>
     <p class="fingerprint">${fingerprint}</p>
-    <p class="how" style="border:0;margin:0 0 2rem;padding:0">${bits.toFixed(1)} bits of entropy · assembled from ${Object.keys(signals).length} signals</p>
-    <p><button class="go" id="raw-btn">Show me the raw data</button>
-       <button class="go ghost" id="forget-btn" style="margin-left:.6rem">Forget me</button></p>
+    <p class="how" style="border:0;margin:0 0 2rem;padding:0">${bits.toFixed(1)} بیت واحد، متصل شده از ${Object.keys(signals).length} عدد سیگنال</p>
+    <p><button class="go" id="raw-btn">اطلاعات خالص را به من نشان بده</button>
+       <button class="go ghost" id="forget-btn" style="margin-left:.6rem">مرا فراموش کن</button></p>
     <div id="raw-wrap" hidden><table class="raw"><tbody>${rows}</tbody></table></div>
     <p class="footnote">
-      Nothing on this page was stored on a server. Everything ran in your browser, or was
-      read from the connection itself. The point isn't that this site is creepy, it's that
-      the site you visit <i>after</i> this one can do all of it too, and won't tell you.
-      <br><br>PS: some of what you just read may be flat-out wrong. That helps less than
-      you'd think, fingerprinting doesn't need to be <i>accurate</i>, it needs to be
-      <i>consistent</i>. If your browser gets something wrong the same way on every site,
-      the mistake itself becomes part of your fingerprint. And this is the hobbled,
-      no-cookie version: a site that does set cookies can patch the bad guesses over time,
-      and anywhere you log in or pay never had to guess at all.
-      <br><br>Made as a weekend project while studying fingerprinting. <a href="https://github.com/Kuberwastaken/cookie" target="_blank" rel="noopener">It's open source too.</a>
-      <br>Made with &lt;3 by <a href="https://kuber.studio" target="_blank" rel="noopener">Kuber Mehta</a> (<a href="https://x.com/kuberwastaken" target="_blank" rel="noopener">kuberwastaken</a>)
+      هیچ چیزی در این صفحه در سرور ذخیره نشده است. همه چیز در مرورگر شما اجرا میشود، یا از خود اتصال خوانده میشود. 
+      نکته این نیست که این سایت ترسناک است، بلکه این است که سایتی که بعد از این سایت از آن بازدید میکنید نیز میتواند همه این کارها را انجام دهد و به شما هم نخواهد گفت.
+      <br><br>پی نوشت: برخی از چیزهایی که خواندید ممکن است کاملا اشتباه باشند. 
+      اما این کمتر از آنچه فکر میکنید کمک میکند، لازم نیست اثر انگشت <i>دقیق</i> باشد، بلکه باید <i>ثابت</i> باشد. اگر مرورگر شما در هر سایتی به یک شکل اشتباه کند، خود آن اشتباه به بخشی از اثر انگشت شما تبدیل میشود. 
+      و البته این نسخه دست و پا چلفتی و بدون کوکی است: سایتی که کوکی تنظیم میکند میتواند حدس های اشتباه را به مرور زمان اصلاح کند، 
+      و هر جایی که وارد سیستم میشوید یا پرداخت می‌کنید، هرگز مجبور به حدس زدن نیست.
+      <br><br>ترجمه شده توسط <a href="https://github.com/amirgame197" target="_blank" rel="noopener">amir</a> (<a href="https://github.com/amirgame197/Cookie-Persian" target="_blank" rel="noopener">مشاهده پروژه</a>)
+      <br>مشاهده <a href="https://github.com/Kuberwastaken/cookie" target="_blank" rel="noopener">نسخه انگلیسی پروژه کوکی.</a>
     </p>
   `);
 
@@ -243,5 +240,5 @@ function esc(s: string): string {
 
 main().catch((err) => {
   const root = document.getElementById('dossier');
-  if (root) root.innerHTML = `<p class="claim">Something broke while reading you. Ironically, that's the private outcome. <span class="how">${esc(String(err))}</span></p>`;
+  if (root) root.innerHTML = `<p class="claim">چیزی هنگام خواندن دستگاه شما اشتباه پیش رفت. از قضا، این نتیجه‌ی آن است. <span class="how">${esc(String(err))}</span></p>`;
 });

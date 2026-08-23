@@ -1,14 +1,7 @@
-# I didn't set a cookie.
+# من هیچ کوکی‌ای تنظیم نکردم.
 
-A live demonstration of everything a website learns about you before you click
-anything with no cookies. It reads you during the connection and in the first two seconds of JavaScript, then narrates what it found back to you in plain English, as if a stranger were describing you out loud.
+یک نمایش زنده از تمام چیز هایی که یک وبسایت میتواند درباره شما یاد بگیرد، حتی قبل از اینکه جایی کلیک کنید، و بدون استفاده از کوکی. این برنامه در طول اتصال و در دو ثانیه اول جاوا اسکریپت، دیتای شما را میخواند، سپس آنچه را که یافته است به زبان فارسی ساده برای شما توضیح میدهد. انگار که یک غریبه شما را با صدای بلند توصیف کرده است.
 
-The argument isn't "look how creepy *this* site is." It's: **the site you visit after this one can do all of it too, and won't tell you.**
+نکته این نیست که بگوییم "ببین *این* سایت چقدر ترسناک است!"، نکته این است که: **هر سایتی که بعد از اینجا مرور میکنید هم تمام این اطلاعات را در اختیار دارد، اما هیچوقت به شما نخواهد گفت.**
 
-## License
-
-[Modified MIT](LICENSE). Free to read, learn from, fork, and reuse for study,
-education, or awareness — no strings beyond keeping the notice. If you deploy it
-(or a fork) as a real public-facing site or product, the one added condition is
-visible, user-facing credit to Kuber Mehta with a link back here, in the spirit
-of CC BY.
+##### This is a translated version of [Kuber Mehta's "cookie"](https://github.com/Kuberwastaken/cookie). If you want to use the original version, check it out.

@@ -5,6 +5,11 @@
  * stating facts, not a product trying to impress you.
  */
 
+@font-face {
+    font-family: 'Estedad';
+    src: url('/src/fonts/Estedad.ttf') format('truetype');
+}
+
 :root {
   --ink: #000;
   --bg: #fff;
@@ -13,7 +18,7 @@
   --faint: #888;
   --rule: #cccccc;
   --box: #f4f4f4;
-  --serif: Times, 'Times New Roman', serif;
+  --serif: 'Estedad', Times, 'Times New Roman', serif;
   --mono: 'Courier New', Courier, monospace;
 }
 

@@ -57,7 +57,7 @@ export const webrtcProbe: Probe = {
   tier: 2,
   async run(ctx) {
     if (!ctx.consented) {
-      return [sig('webrtc.blocked', 'WebRTC probe', true, { error: 'no consent' })];
+      return [sig('webrtc.blocked', 'کاوش WebRTC', true, { error: 'دسترسی داده نشد' })];
     }
 
     const out: Signal[] = [];
@@ -66,13 +66,13 @@ export const webrtcProbe: Probe = {
     }).RTCPeerConnection;
 
     if (!RTCPC) {
-      out.push(sig('webrtc.blocked', 'WebRTC available', true, { error: 'RTCPeerConnection unavailable' }));
-      out.push(sig('webrtc.localIPs', 'Local IPs leaked', [], { entropy: 6 }));
-      out.push(sig('webrtc.publicIP', 'Public IP leaked', null, { entropy: 8 }));
-      out.push(sig('webrtc.mdnsProtected', 'mDNS local-IP protection', false));
-      out.push(sig('webrtc.candidateTypes', 'ICE candidate types seen', []));
-      out.push(sig('webrtc.sdpHash', 'SDP codec fingerprint', null));
-      out.push(sig('webrtc.leaks', 'Any real IP leaked', false));
+      out.push(sig('webrtc.blocked', 'WebRTC مجاز است', true, { error: 'اتصال مستقیم در دسترس نبود' }));
+      out.push(sig('webrtc.localIPs', 'آیپی های داخلی لو رفته', [], { entropy: 6 }));
+      out.push(sig('webrtc.publicIP', 'آیپی عمومی لو رفته', null, { entropy: 8 }));
+      out.push(sig('webrtc.mdnsProtected', 'محافظت از آیپی داخلی mDns', false));
+      out.push(sig('webrtc.candidateTypes', 'انواع کاندیدای ICE مشاهده شده', []));
+      out.push(sig('webrtc.sdpHash', 'اثرانگشت کدک SDP', null));
+      out.push(sig('webrtc.leaks', 'آیا هیچ آیپی همومی لو رفته', false));
       return out;
     }
 
@@ -136,16 +136,16 @@ export const webrtcProbe: Probe = {
 
       const publicIP = publicIPs[0] ?? null;
 
-      out.push(sig('webrtc.localIPs', 'Local IPs leaked', localIPs, {
-        display: localIPs.length ? localIPs.join(', ') : 'none (mDNS-protected or none found)',
+      out.push(sig('webrtc.localIPs', 'آیپی های داخلی لو رفته', localIPs, {
+        display: localIPs.length ? localIPs.join(', ') : 'هیچ (احتمالا از mDns محافظت میشود)',
         entropy: 6,
       }));
-      out.push(sig('webrtc.publicIP', 'Public IP leaked', publicIP, {
+      out.push(sig('webrtc.publicIP', 'آیپی عمومی لو رفته', publicIP, {
         display: publicIP ?? 'not leaked',
         entropy: 8,
       }));
-      out.push(sig('webrtc.mdnsProtected', 'mDNS local-IP protection', mdnsProtected));
-      out.push(sig('webrtc.candidateTypes', 'ICE candidate types seen', candidateTypes, {
+      out.push(sig('webrtc.mdnsProtected', 'محافظت از آیپی داخلی mDns', mdnsProtected));
+      out.push(sig('webrtc.candidateTypes', 'انواع کاندیدای ICE مشاهده شده', candidateTypes, {
         display: candidateTypes.join(', ') || 'none',
       }));
 
@@ -157,18 +157,18 @@ export const webrtcProbe: Probe = {
         .filter((l) => l.startsWith('a=extmap:') || l.startsWith('a=rtpmap:') || l.startsWith('a=fmtp:'))
         .sort();
       const sdpHash = fingerprintLines.length ? hash(fingerprintLines.join('\n')) : null;
-      out.push(sig('webrtc.sdpHash', 'SDP codec fingerprint', sdpHash, { entropy: 4 }));
+      out.push(sig('webrtc.sdpHash', 'اثرانگشت کدک SDP', sdpHash, { entropy: 4 }));
 
       out.push(sig('webrtc.blocked', 'WebRTC available', allCandidateStrings.length === 0));
-      out.push(sig('webrtc.leaks', 'Any real IP leaked', localIPs.length > 0 || publicIPs.length > 0));
+      out.push(sig('webrtc.leaks', 'آیا هیچ آیپی همومی لو رفته', localIPs.length > 0 || publicIPs.length > 0));
     } catch (e) {
-      out.push(sig('webrtc.blocked', 'WebRTC available', true, { error: String(e) }));
-      out.push(sig('webrtc.localIPs', 'Local IPs leaked', [], { entropy: 6 }));
-      out.push(sig('webrtc.publicIP', 'Public IP leaked', null, { entropy: 8 }));
-      out.push(sig('webrtc.mdnsProtected', 'mDNS local-IP protection', false));
-      out.push(sig('webrtc.candidateTypes', 'ICE candidate types seen', []));
-      out.push(sig('webrtc.sdpHash', 'SDP codec fingerprint', null));
-      out.push(sig('webrtc.leaks', 'Any real IP leaked', false));
+      out.push(sig('webrtc.blocked', 'WebRTC مجاز است', true, { error: String(e) }));
+      out.push(sig('webrtc.localIPs', 'آیپی های داخلی لو رفته', [], { entropy: 6 }));
+      out.push(sig('webrtc.publicIP', 'آیپی عمومی لو رفته', null, { entropy: 8 }));
+      out.push(sig('webrtc.mdnsProtected', 'محافظت از آیپی داخلی mDns', false));
+      out.push(sig('webrtc.candidateTypes', 'انواع کاندیدای ICE مشاهده شده', []));
+      out.push(sig('webrtc.sdpHash', 'اثرانگشت کدک SDP', null));
+      out.push(sig('webrtc.leaks', 'آیا هیچ آیپی همومی لو رفته', false));
     } finally {
       pc?.close();
     }

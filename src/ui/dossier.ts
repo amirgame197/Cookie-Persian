@@ -4,16 +4,16 @@ import { follow } from './autoscroll';
 
 export const ACTS: Record<number, { label: string; invasive?: boolean }> = {
   0: { label: '' },
-  1: { label: 'Where you are' },
-  2: { label: 'What you are using' },
-  3: { label: 'What you are using it on' },
-  4: { label: "Things that don't add up" },
-  5: { label: 'What you have installed' },
-  6: { label: 'What we can reach on your machine', invasive: true },
-  7: { label: 'Who you are, not your device', invasive: true },
-  8: { label: 'What you are worth' },
-  9: { label: "We've met before" },
-  10: { label: 'The receipt' },
+  1: { label: 'موقعیت مکانی شما' },
+  2: { label: 'دستگاهی که از آن استفاده میکنید' },
+  3: { label: 'آنچه دستگاه شما دارد' },
+  4: { label: "موارد غیر منتظره!" },
+  5: { label: 'چیز هایی که نصب دارید' },
+  6: { label: 'مسیر هایی که میتوانیم در دستگاه شما ببینیم', invasive: true },
+  7: { label: 'جدای از دستگاه شما، خودتان چه هستید', invasive: true },
+  8: { label: 'چقدر ارزش دارید' },
+  9: { label: "قبلا با هم ملاقات داشته ایم" },
+  10: { label: 'رسید' },
 };
 
 const HEDGE: Record<Claim['confidence'], string> = {
@@ -104,7 +104,7 @@ export class Dossier {
       yes.textContent = cta;
       const no = document.createElement('button');
       no.className = 'go ghost';
-      no.textContent = 'No thanks';
+      no.textContent = 'نه ممنون';
       no.style.marginLeft = '0.6rem';
       yes.addEventListener('click', () => { wrap.remove(); resolve(true); });
       no.addEventListener('click', () => { wrap.remove(); resolve(false); });
@@ -140,8 +140,8 @@ export class Dossier {
       const wrap = document.createElement('section');
       wrap.className = 'act invasive';
       wrap.innerHTML = `
-        <p class="act-label">Now let's profile you, not your device</p>
-        <p class="claim likely" style="opacity:1;transform:none">Type this sentence. We'll read how you type, not just what.</p>
+        <p class="act-label">حالا بیایید شما را معرفی کنیم، نه دستگاه تان را</p>
+        <p class="claim likely" style="opacity:1;transform:none">این جمله را تایپ کنید. ما نحوه تایپ شما را خواهیم خواند، نه فقط آنچه را که تایپ میکنید...</p>
         <p class="type-target">${escape(target)}</p>
       `;
       const input = document.createElement('input');
@@ -150,7 +150,7 @@ export class Dossier {
       input.autocomplete = 'off';
       input.autocapitalize = 'off';
       input.spellcheck = false;
-      input.setAttribute('aria-label', 'Type the sentence above');
+      input.setAttribute('aria-label', 'جمله بالا را تایپ کنید');
 
       // Record keystroke timing from the very first key, this is the whole point.
       const events: KeyEvent[] = [];
@@ -165,17 +165,17 @@ export class Dossier {
 
       const hint = document.createElement('p');
       hint.className = 'type-hint';
-      hint.textContent = 'Keep going…';
+      hint.textContent = 'ادامه دهید...';
 
       const done = document.createElement('button');
       done.className = 'go';
-      done.textContent = 'Read my typing';
+      done.textContent = 'تایپ کردن من را بخوان';
       done.style.marginTop = '1rem';
       done.disabled = true;
 
       const skip = document.createElement('button');
       skip.className = 'go ghost';
-      skip.textContent = 'Skip this';
+      skip.textContent = 'رد کردن این مرحله';
       skip.style.marginLeft = '0.6rem';
 
       let settled = false;
@@ -191,9 +191,9 @@ export class Dossier {
       input.addEventListener('input', () => {
         const n = input.value.trim().length;
         done.disabled = n < MIN;
-        if (n < MIN) { hint.textContent = 'Keep going…'; hint.className = 'type-hint'; }
-        else if (n < target.length - 2) { hint.textContent = 'Enough to read you, finish the line or hit the button.'; hint.className = 'type-hint ready'; }
-        else { hint.textContent = 'Perfect. Press Enter.'; hint.className = 'type-hint ready'; }
+        if (n < MIN) { hint.textContent = 'ادامه دهید...'; hint.className = 'type-hint'; }
+        else if (n < target.length - 2) { hint.textContent = 'همینقدر برای خواندن شما کافیست. این خط را تمام کن یا دکمه را بزن.'; hint.className = 'type-hint ready'; }
+        else { hint.textContent = 'عالی. دکمه اینتر را بزن.'; hint.className = 'type-hint ready'; }
       });
       input.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' && input.value.trim().length >= MIN) finish(false);
@@ -213,8 +213,8 @@ export class Dossier {
   async rarityFunnel(rows: Array<{ label: string; value: string; pct: number; cumulative: number }>): Promise<void> {
     const el = document.createElement('section');
     el.className = 'act';
-    el.innerHTML = `<p class="act-label">How rare that makes you</p>
-      <p class="claim likely" style="opacity:1;transform:none">Each thing on its own is common. Watch how fast they multiply.</p>
+    el.innerHTML = `<p class="act-label">چقدر شما را کم یاب میکند</p>
+      <p class="claim likely" style="opacity:1;transform:none">هر چیزی به خودی خود رایج است. ببینید چقدر سریع تکثیر میشوند.</p>
       <div class="funnel"></div>`;
     this.root.append(el);
     const host = el.querySelector('.funnel')!;
@@ -238,14 +238,14 @@ export class Dossier {
     const el = document.createElement('section');
     el.className = 'act';
     const pixelHtml = pixels.length
-      ? `<p class="claim likely" style="opacity:1;transform:none">Your browser is already carrying tracking IDs:</p>` +
+      ? `<p class="claim likely" style="opacity:1;transform:none">مرورگر شما هم اکنون هم درحال حمل شناسه های ردیابی ست:</p>` +
         pixels.map((p) => `<div class="how" style="margin-bottom:.6rem"><b>${escape(p.name)}</b> = ${escape(p.value)}\n${escape(p.means)}</div>`).join('')
       : '';
     el.innerHTML = `
-      <p class="act-label">What you are worth</p>
-      <p class="claim likely" style="opacity:1;transform:none">Every ad-supported page you open auctions you to dozens of bidders in about a tenth of a second. This is the actual message that describes you, built just now, from your real data, in the real format (OpenRTB 2.6):</p>
+      <p class="act-label">چقدر ارزش دارید</p>
+      <p class="claim likely" style="opacity:1;transform:none">هر صفحه تبلیغاتی که باز میکنید، شما را در عرض حدود یک دهم ثانیه به ده‌ ها پیشنهاد دهنده پیشنهاد میدهد. این پیام واقعی است که شما را توصیف می‌کند، که همین الان، از داده‌های واقعی شما، در قالب واقعی (OpenRTB 2.6) ساخته شده است:</p>
       <pre class="raw json-receipt">${escape(json)}</pre>
-      <p class="how" style="border:0;margin:.4rem 0 1.4rem;padding:0">Everything here is real except <b>user.data.segment</b>, that's where a data broker attaches your inferred interests ("in-market for a car", "new parent", "cardholder"). We can't show yours because we're not a paying buyer. The bidders can.</p>
+      <p class="how" style="border:0;margin:.4rem 0 1.4rem;padding:0">همه چیز اینجا واقعی است، به جز <b>user.data.segment</b>. اینجاست که یک دلال داده، علایق استنباطی شما (مثلاً "در بازار خودرو"، "والدین جدید"، "دارنده کارت") را ضمیمه میکند. ما نمی‌توانیم علایق شما را نشان دهیم چون ما خریدار نیستیم. پیشنهاد دهندگان می‌توانند.</p>
       ${pixelHtml}
     `;
     this.root.append(el);

@@ -52,10 +52,10 @@ export async function runIntro(root: HTMLElement, segments: IntroSegment[], auto
   const skip = document.createElement('button');
   skip.type = 'button';
   skip.className = 'intro-skip';
-  skip.textContent = 'skip intro';
+  skip.textContent = 'رد کردن این قسمت';
   const hint = document.createElement('p');
   hint.className = 'intro-hint';
-  hint.textContent = 'press enter →';
+  hint.textContent = 'اینتر را فشار دهید →';
   document.body.append(skip, hint);
 
   // Skipping doesn't discard the intro, it prints the rest of it instantly:
