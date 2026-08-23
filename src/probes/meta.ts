@@ -11,7 +11,7 @@ const sig = (id: string, label: string, value: unknown, extra: Partial<Signal> =
  */
 export const metaProbe: Probe = {
   id: 'meta',
-  title: 'Session',
+  title: 'نشست',
   tier: 1,
   async run() {
     const out: Signal[] = [];
@@ -19,9 +19,9 @@ export const metaProbe: Probe = {
     // --- Where you came from (nobody reads this, and it's right there) ---
     try {
       const ref = document.referrer || '';
-      out.push(sig('nav.referrer', 'Referrer', ref || '(none, typed in or bookmarked)'));
+      out.push(sig('nav.referrer', 'ارجاع دهنده', ref || '(هیچ، آدرس را وارد کرده اید یا بوکمارک داشته اید)'));
       if (ref) {
-        try { out.push(sig('nav.referrerHost', 'Came from', new URL(ref).hostname, { entropy: 2 })); }
+        try { out.push(sig('nav.referrerHost', 'از اینجا آمده', new URL(ref).hostname, { entropy: 2 })); }
         catch { /* malformed referrer */ }
       }
     } catch { /* ignore */ }
@@ -29,7 +29,7 @@ export const metaProbe: Probe = {
     // --- Multiple monitors (no permission on Chrome) ---
     try {
       if ('isExtended' in screen) {
-        out.push(sig('meta.multiMonitor', 'Multiple screens', (screen as Screen & { isExtended?: boolean }).isExtended === true));
+        out.push(sig('meta.multiMonitor', 'چند نمایشگر', (screen as Screen & { isExtended?: boolean }).isExtended === true));
       }
     } catch { /* ignore */ }
 
@@ -41,10 +41,10 @@ export const metaProbe: Probe = {
     try {
       const est = await navigator.storage?.estimate?.();
       if (est?.quota) {
-        out.push(sig('meta.storageQuota', 'Storage quota (bytes)', est.quota, {
-          display: `${(est.quota / 1e9).toFixed(1)} GB`, entropy: 2.5,
+        out.push(sig('meta.storageQuota', 'سهم فضای ذخیره سازی (بایت)', est.quota, {
+          display: `${(est.quota / 1e9).toFixed(1)} گیگابایت`, entropy: 2.5,
         }));
-        out.push(sig('meta.storageUsed', 'Storage used (bytes)', est.usage ?? 0));
+        out.push(sig('meta.storageUsed', 'فضای ذخیره سازی استفاده شده (بایت)', est.usage ?? 0));
       }
     } catch { /* ignore */ }
 

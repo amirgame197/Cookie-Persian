@@ -31,7 +31,7 @@ export function buildBidRequest(s: SignalMap): Record<string, unknown> {
     device: {
       ua,
       // Prefer the edge-observed IP; fall back to the one WebRTC leaked, if any.
-      ip: str('edge.ip') ?? str('webrtc.publicIP') ?? '<your public IP>',
+      ip: str('edge.ip') ?? str('webrtc.publicIP') ?? '<آیپی عمومی شما>',
       geo: {
         lat: numOr(str('edge.latitude'), 0),
         lon: numOr(str('edge.longitude'), 0),
@@ -56,13 +56,13 @@ export function buildBidRequest(s: SignalMap): Record<string, unknown> {
       lmt: 0,
     },
     user: {
-      id: '<exchange-assigned ID from an ID-sync cookie>',
-      buyeruid: '<buyer-specific ID>',
+      id: '<شناسه اختصاص داده شده توسط صرافی از کوکی همگام سازی شناسه>',
+      buyeruid: '<شناسه مخصوص خریدار>',
       data: [{
-        id: '<data-provider>',
+        id: '<ارائه دهنده داده>',
         name: 'a-data-broker.example',
         segment: [
-          { id: 'PLACEHOLDER', name: 'in-market:...  (real audience segments attach here, we are not a data buyer, so we cannot show yours)' },
+          { id: 'جایگزین', name: 'در بازار:... (بخش های واقعی مخاطب اینجا می آیند؛ ما خریدار داده نیستیم، پس مال شما را نمیتوانیم نشان بدهیم)' },
         ],
       }],
     },
@@ -78,11 +78,11 @@ export function pixelCookies(): Array<{ name: string; value: string; means: stri
     const [name, ...rest] = c.split('=');
     const value = rest.join('=');
     if (name === '_ga' || name.startsWith('_ga_')) {
-      out.push({ name, value, means: 'Google Analytics client ID, stitches your sessions together across visits.' });
+      out.push({ name, value, means: 'شناسه کاربر Google Analytics که نشست هایتان را بین بازدیدها به هم وصل میکند.' });
     } else if (name === '_fbp') {
-      out.push({ name, value, means: 'Meta Pixel browser ID, sent to Facebook with every tracked event.' });
+      out.push({ name, value, means: 'شناسه مرورگر Meta Pixel که با هر رویداد ردیابی شده به Facebook فرستاده میشود.' });
     } else if (name === '_fbc') {
-      out.push({ name, value, means: 'Meta click ID, links this browser to an ad you clicked.' });
+      out.push({ name, value, means: 'شناسه کلیک Meta که این مرورگر را به تبلیغی که کلیک کرده اید وصل میکند.' });
     }
   }
   return out;

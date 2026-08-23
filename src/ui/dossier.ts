@@ -74,7 +74,7 @@ export class Dossier {
     const btn = document.createElement('button');
     btn.className = 'how-toggle';
     btn.type = 'button';
-    btn.textContent = 'how?';
+    btn.textContent = 'چطور؟';
     btn.setAttribute('aria-expanded', 'false');
 
     const drawer = document.createElement('div');
@@ -264,7 +264,7 @@ function escape(s: string): string {
 function evidenceHtml(claim: Claim, signals: SignalMap): string {
   const lines = claim.evidence.map((id) => {
     const s = signals[id];
-    if (!s) return `${id} = <i>unavailable</i>`;
+    if (!s) return `${id} = <i>در دسترس نیست</i>`;
     const v = s.display ?? stringify(s.value);
     return `${escape(s.label)} = <b>${escape(truncate(v, 220))}</b>`;
   });

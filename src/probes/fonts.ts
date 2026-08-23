@@ -189,16 +189,16 @@ function inferSoftware(detected: Set<string>): SoftwareMatch[] {
 /** Rasterisation and system-font enumeration, an old trick, still brutally effective. */
 export const fontProbe: Probe = {
   id: 'fonts',
-  title: 'Fonts',
+  title: 'فونت ها',
   tier: 1,
   async run() {
     const detected = detectFonts(CANDIDATES);
     if (detected === null) {
       // Sentinel tripped or no canvas, refuse to guess rather than emit noise.
       return [
-        sig('fonts.count', 'Font count', 0),
-        sig('fonts.software', 'Implied installed software', [], { display: '', entropy: 0 }),
-        sig('fonts.__error', 'Fonts', null, { error: 'font detection unreliable in this environment' }),
+        sig('fonts.count', 'تعداد فونت', 0),
+        sig('fonts.software', 'نرم افزارهای نصب شده حدسی', [], { display: '', entropy: 0 }),
+        sig('fonts.__error', 'فونت ها', null, { error: 'پیدا کردن فونت در این محیط قابل اعتماد نیست' }),
       ];
     }
     const detectedSet = new Set(detected);
@@ -236,14 +236,14 @@ export const fontProbe: Probe = {
 
     return [
       sig('fonts.list', 'Detected fonts', sorted, {
-        display: sorted.slice(0, 12).join(', ') + (sorted.length > 12 ? `, +${sorted.length - 12} more` : ''),
+        display: sorted.slice(0, 12).join(', ') + (sorted.length > 12 ? `، ${sorted.length - 12} تای دیگر` : ''),
         entropy: 6,
       }),
-      sig('fonts.count', 'Font count', sorted.length, { entropy: 2 }),
-      sig('fonts.hash', 'Font fingerprint', fontsHash, { entropy: 4 }),
-      sig('fonts.impliedOS', 'Implied OS', impliedOS),
-      sig('fonts.impliedOSVersion', 'Implied OS version', impliedOSVersion),
-      sig('fonts.software', 'Implied installed software', software, {
+      sig('fonts.count', 'تعداد فونت', sorted.length, { entropy: 2 }),
+      sig('fonts.hash', 'اثرانگشت فونت', fontsHash, { entropy: 4 }),
+      sig('fonts.impliedOS', 'سیستم عامل حدسی', impliedOS),
+      sig('fonts.impliedOSVersion', 'نسخه حدسی سیستم عامل', impliedOSVersion),
+      sig('fonts.software', 'نرم افزارهای نصب شده حدسی', software, {
         display: software.map((s) => s.name).join(', '),
         entropy: software.length ? 2 : 0,
       }),

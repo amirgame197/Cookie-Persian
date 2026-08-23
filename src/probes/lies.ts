@@ -210,7 +210,7 @@ function featureImpliedPlatform(): { platform: string; mismatch: boolean } {
  * resolution, and engine/platform fingerprints that disagree with the UA. */
 export const liesProbe: Probe = {
   id: 'lies',
-  title: 'Lies',
+  title: 'دروغ ها',
   tier: 0,
   async run() {
     const records: Record_[] = [...nativeIntegrityChecks(), ...proxySmellChecks()];
@@ -249,21 +249,21 @@ export const liesProbe: Probe = {
     const { platform: featurePlatform, mismatch: uaPlatformMismatch } = featureImpliedPlatform();
 
     return [
-      sig('lies.records', 'Tamper findings', records, {
-        display: records.length ? `${records.length} anomalies` : 'none found',
+      sig('lies.records', 'دستکاری های پیدا شده', records, {
+        display: records.length ? `${records.length} مورد غیر عادی` : 'چیزی پیدا نشد',
       }),
-      sig('lies.count', 'Tamper count', records.length),
-      sig('lies.tamperedApis', 'Tampered APIs', tamperedApis, { display: tamperedApis.join(', ') || 'none' }),
-      sig('lies.clientLitter', 'Injected window globals', litter, {
-        display: litter.length ? `${litter.length} extra globals` : 'none',
+      sig('lies.count', 'تعداد دستکاری', records.length),
+      sig('lies.tamperedApis', 'APIهای دستکاری شده', tamperedApis, { display: tamperedApis.join(', ') || 'هیچ' }),
+      sig('lies.clientLitter', 'متغیرهای سراسری window تزریق شده', litter, {
+        display: litter.length ? `${litter.length} متغیر سراسری اضافه` : 'هیچ',
       }),
-      sig('lies.timerCoarsened', 'Timer resolution coarsened', coarsened),
-      sig('lies.brave', 'Brave detected', brave),
-      sig('lies.braveMode', 'Brave shields mode', braveMode ?? null),
-      sig('lies.pluginInconsistency', 'Plugin/MIME inconsistency', pluginInconsistency),
-      sig('lies.uaPlatformMismatch', 'UA vs feature-implied platform mismatch', uaPlatformMismatch),
-      sig('lies.featurePlatform', 'Feature-implied platform', featurePlatform),
-      sig('lies.jsEngine', 'JS engine (from error text)', jsEngine),
+      sig('lies.timerCoarsened', 'دقت تایمر کمتر شده', coarsened),
+      sig('lies.brave', 'Brave پیدا شد', brave),
+      sig('lies.braveMode', 'حالت سپرهای Brave', braveMode ?? null),
+      sig('lies.pluginInconsistency', 'ناسازگاری پلاگین و MIME', pluginInconsistency),
+      sig('lies.uaPlatformMismatch', 'ناسازگاری پلتفرم UA و قابلیت ها', uaPlatformMismatch),
+      sig('lies.featurePlatform', 'پلتفرم حدسی از قابلیت ها', featurePlatform),
+      sig('lies.jsEngine', 'موتور JS (از متن خطا)', jsEngine),
     ];
   },
 };

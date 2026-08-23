@@ -74,11 +74,11 @@ function probeScheme(scheme: string, outerSignal: AbortSignal): Promise<boolean>
 
 export const appsProbe: Probe = {
   id: 'apps',
-  title: 'Installed apps',
+  title: 'برنامه های نصب شده',
   tier: 2,
   async run(ctx) {
     if (!ctx.consented) {
-      return [sig('apps.reliable', 'App probe', false, { error: 'no consent' })];
+      return [sig('apps.reliable', 'کاوش برنامه ها', false, { error: 'دسترسی داده نشد' })];
     }
 
     const installed: string[] = [];
@@ -97,14 +97,14 @@ export const appsProbe: Probe = {
 
     return [
       sig('apps.installed', 'Detected apps', installed, {
-        display: installed.length ? installed.join(', ') : 'none detected',
+        display: installed.length ? installed.join(', ') : 'چیزی پیدا نشد',
         entropy: installed.length ? 2 : 0,
       }),
-      sig('apps.probed', 'Schemes probed', probed, { display: `${probed.length} schemes` }),
+      sig('apps.probed', 'اسکیم های بررسی شده', probed, { display: `${probed.length} اسکیم` }),
       // Best-effort only: browsers throttle repeated scheme navigation and
       // the timing/error heuristic has real false-negative and false-positive
       // rates, so this is never presented as a certain result.
-      sig('apps.reliable', 'Reliable', false),
+      sig('apps.reliable', 'قابل اعتماد', false),
     ];
   },
 };

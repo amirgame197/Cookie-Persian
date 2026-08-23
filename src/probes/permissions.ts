@@ -44,10 +44,10 @@ const CAPABILITIES: Array<{ id: string; label: string; test: () => boolean }> = 
 
 export const permissionProbe: Probe = {
   id: 'perm',
-  title: 'Permissions & capabilities',
+  title: 'دسترسی ها و توانایی ها',
   tier: 2,
   async run(ctx) {
-    if (!ctx.consented) return [sig('perm.blocked', 'Permission probe', true, { error: 'no consent' })];
+    if (!ctx.consented) return [sig('perm.blocked', 'کاوش دسترسی ها', true, { error: 'دسترسی داده نشد' })];
     const out: Signal[] = [];
     const perms = navigator.permissions;
 
@@ -63,13 +63,13 @@ export const permissionProbe: Probe = {
       }));
       const granted = Object.entries(states).filter(([, s]) => s === 'granted').map(([n]) => n);
       const denied = Object.entries(states).filter(([, s]) => s === 'denied').map(([n]) => n);
-      out.push(sig('perm.states', 'Permission states', states, {
+      out.push(sig('perm.states', 'وضعیت دسترسی ها', states, {
         display: Object.entries(states).map(([n, s]) => `${n}:${s}`).join(', '), entropy: 3,
       }));
-      out.push(sig('perm.granted', 'Already granted to this site', granted, {
-        display: granted.join(', ') || 'none', entropy: granted.length ? 2 : 0,
+      out.push(sig('perm.granted', 'از قبل به این سایت داده شده', granted, {
+        display: granted.join(', ') || 'هیچ', entropy: granted.length ? 2 : 0,
       }));
-      out.push(sig('perm.denied', 'Explicitly blocked', denied, { display: denied.join(', ') || 'none' }));
+      out.push(sig('perm.denied', 'صریحا مسدود شده', denied, { display: denied.join(', ') || 'هیچ' }));
     }
 
     // Capability matrix.
@@ -77,7 +77,7 @@ export const permissionProbe: Probe = {
     for (const c of CAPABILITIES) {
       try { caps[c.id] = c.test(); } catch { caps[c.id] = false; }
     }
-    out.push(sig('perm.capabilities', 'Powerful APIs available', caps, {
+    out.push(sig('perm.capabilities', 'APIهای قدرتمند در دسترس', caps, {
       display: Object.entries(caps).filter(([, v]) => v).map(([k]) => k).join(', '), entropy: 2,
     }));
 
@@ -104,8 +104,8 @@ export const permissionProbe: Probe = {
         if (ports.length) pairedDevices.push(`Serial: ${ports.length} port(s)`);
       }
     } catch { /* ignore */ }
-    out.push(sig('perm.pairedDevices', 'Devices already paired to this site', pairedDevices, {
-      display: pairedDevices.join(', ') || 'none', entropy: pairedDevices.length ? 4 : 0,
+    out.push(sig('perm.pairedDevices', 'دستگاه های از قبل جفت شده با این سایت', pairedDevices, {
+      display: pairedDevices.join(', ') || 'هیچ', entropy: pairedDevices.length ? 4 : 0,
     }));
 
     return out;

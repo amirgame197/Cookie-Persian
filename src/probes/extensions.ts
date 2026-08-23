@@ -85,11 +85,11 @@ function detectAdblock(): Promise<boolean> {
 
 export const extProbe: Probe = {
   id: 'ext',
-  title: 'Extensions',
+  title: 'افزونه ها',
   tier: 2,
   async run(ctx) {
     if (!ctx.consented) {
-      return [sig('ext.adblock', 'Ad blocker', false, { error: 'no consent' })];
+      return [sig('ext.adblock', 'مسدود کننده تبلیغ', false, { error: 'دسترسی داده نشد' })];
     }
 
     const out: Signal[] = [];
@@ -106,8 +106,8 @@ export const extProbe: Probe = {
       }
     } catch { /* fall through with whatever we gathered */ }
 
-    out.push(sig('ext.detected', 'Detected extensions', detected, {
-      display: detected.length ? detected.map((d) => d.name).join(', ') : 'none detected',
+    out.push(sig('ext.detected', 'افزونه های پیدا شده', detected, {
+      display: detected.length ? detected.map((d) => d.name).join(', ') : 'چیزی پیدا نشد',
       entropy: detected.length ? 3 : 0,
     }));
 
@@ -128,8 +128,8 @@ export const extProbe: Probe = {
       }
     }
 
-    out.push(sig('ext.adblock', 'Ad blocker present', adblock));
-    out.push(sig('ext.adblockName', 'Ad blocker identity', adblockName));
+    out.push(sig('ext.adblock', 'مسدود کننده تبلیغ وجود دارد', adblock));
+    out.push(sig('ext.adblockName', 'نام مسدود کننده تبلیغ', adblockName));
 
     return out;
   },

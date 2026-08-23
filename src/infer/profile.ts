@@ -31,17 +31,17 @@ export function behavioralClaims(s: SignalMap): Claim[] {
   const pointerSure = s['bhv.pointerSure']?.value === true;
   if (pointer && pointer !== 'none') {
     const label: Record<string, string> = {
-      trackpad: `You're on a *trackpad*, almost certainly a laptop.`,
-      mouse: `You're using a *mouse*, not a trackpad.`,
-      touchscreen: `You're on a *touchscreen*.`,
-      stylus: `You're using a *stylus*.`,
+      trackpad: `روی یک *ترک پد* هستید، تقریبا حتما لپ تاپ.`,
+      mouse: `از یک *ماوس* استفاده میکنید، نه ترک پد.`,
+      touchscreen: `روی یک *صفحه لمسی* هستید.`,
+      stylus: `از یک *قلم* استفاده میکنید.`,
     };
     const isInferred = pointer === 'mouse' || pointer === 'trackpad';
     if (label[pointer] && (!isInferred || pointerSure)) {
       out.push(claim({
         id: 'pf.pointer', text: label[pointer], confidence: isInferred ? 'likely' : 'certain', act: 7, weight: 4,
         evidence: ['bhv.pointer'],
-        how: `Your scroll deltas gave it away. Trackpads emit small, varied, often fractional scroll amounts; a mouse wheel clicks in big, repeating notches (~100px each). There's no API that tells us the difference, we inferred it from the shape of your scrolling.`,
+        how: `اختلاف های اسکرولتان لو داد. ترک پد مقدارهای کوچک، متغیر و معمولا کسری میفرستد؛ چرخ ماوس پله های بزرگ و تکراری (هرکدام حدود ۱۰۰ پیکسل). APIای نیست که فرقشان را بگوید؛ از شکل اسکرولتان حدس زدیم.`,
       }));
     }
   }
@@ -53,18 +53,18 @@ export function behavioralClaims(s: SignalMap): Claim[] {
   if (skimmed && wpm) {
     out.push(claim({
       id: 'pf.skim',
-      text: `You didn't really read this. You scrolled through at about *${wpm.toLocaleString()} words a minute*, that's skimming, not reading.`,
+      text: `واقعا این را نخواندید. با حدود *${wpm.toLocaleString('fa-IR')} کلمه در دقیقه* رد شدید؛ این ورق زدن است، نه خواندن.`,
       confidence: 'likely', act: 7, weight: 6,
       evidence: ['bhv.wpm', 'bhv.scrollDepth'],
-      how: `We tracked how fast the page scrolled past you versus how many words were on it. Genuine reading tops out around 600 wpm. You were well past that, you wanted the bottom, not the words.`,
+      how: `سرعت رد شدن صفحه و تعداد کلماتش را مقایسه کردیم. خواندن واقعی حدود ۶۰۰ کلمه در دقیقه سقف دارد. شما خیلی از آن رد شدید؛ پایین صفحه را میخواستید، نه کلمه ها را.`,
     }));
   } else if (depth != null && depth > 0.85 && wpm && wpm < 500) {
     out.push(claim({
       id: 'pf.read',
-      text: `You actually read this, all the way down, at a real reading pace. Thank you. Most people don't.`,
+      text: `واقعا این را تا آخر و با سرعت خواندن واقعی خواندید. ممنون. بیشتر آدم ها این کار را نمیکنند.`,
       confidence: 'likely', act: 7, weight: 3,
       evidence: ['bhv.wpm', 'bhv.scrollDepth'],
-      how: `Your scroll speed stayed in the range of genuine reading and you reached the bottom. We can tell the difference between reading and skimming from timing alone.`,
+      how: `سرعت اسکرولتان در محدوده خواندن واقعی ماند و به پایین رسیدید. فقط از زمان بندی میفهمیم خواندن با ورق زدن فرق دارد.`,
     }));
   }
 
@@ -72,10 +72,10 @@ export function behavioralClaims(s: SignalMap): Claim[] {
   if (s['bhv.keyboardOnly']?.value === true) {
     out.push(claim({
       id: 'pf.keyboard',
-      text: `You've navigated this entire page with the *keyboard*, not once with the pointer.`,
+      text: `کل این صفحه را با *کیبورد* جابه جا شدید، حتی یک بار هم با اشاره گر نه.`,
       confidence: 'certain', act: 7, weight: 4,
       evidence: ['bhv.keyboardNav', 'bhv.pointerNav'],
-      how: `Every navigation was a Tab or arrow key, zero clicks. That's often how people who rely on assistive technology move through a page, and it's completely visible to any site, as a behavioural signal, without asking.`,
+      how: `هر جابه جایی Tab یا کلید جهت بود، صفر کلیک. آدم هایی که به فناوری کمکی تکیه دارند اغلب این طور در صفحه حرکت میکنند و هر سایت بدون پرسیدن، کامل به عنوان سیگنال رفتاری میبیندش.`,
     }));
   }
 
@@ -84,10 +84,10 @@ export function behavioralClaims(s: SignalMap): Claim[] {
   if (tabAways != null && tabAways >= 2) {
     out.push(claim({
       id: 'pf.tabaway',
-      text: `You've looked away and come back *${tabAways} times* while this was open. We counted.`,
+      text: `وقتی این باز بود *${tabAways} بار* نگاهتان را بردید جای دیگر و برگشتید. شمردیم.`,
       confidence: 'certain', act: 7, weight: 3,
       evidence: ['bhv.tabAways'],
-      how: `The Page Visibility API tells any site the exact moment you switch tabs or apps, and when you return. Every site you leave open is quietly counting how often it holds your attention.`,
+      how: `API Page Visibility دقیق میگوید کی تب یا برنامه عوض میکنید و کی برمیگردید. هر سایتی که باز میگذارید بی سر و صدا میشمارد چند بار توجهتان را نگه داشته.`,
     }));
   }
 
@@ -96,10 +96,10 @@ export function behavioralClaims(s: SignalMap): Claim[] {
   if (hes != null && hes > 900) {
     out.push(claim({
       id: 'pf.hesitate',
-      text: `You hover over things for about *${(hes / 1000).toFixed(1)} seconds* before clicking. That's not reading the label, that's hesitating.`,
+      text: `قبل از کلیک حدود *${(hes / 1000).toFixed(1)} ثانیه* روی چیزها هاور میکنید. این خواندن برچسب نیست، مکث است.`,
       confidence: 'guess', act: 7, weight: 3,
       evidence: ['bhv.hesitationMs'],
-      how: `We timed the gap between your cursor landing on a button and you actually clicking it. Long hovers correlate weakly with uncertainty or caution, take this one with a large grain of salt.`,
+      how: `فاصله رسیدن نشانگر به دکمه و کلیک واقعی را زمان گرفتیم. هاور طولانی کمی با تردید یا احتیاط همبستگی دارد؛ این یکی را خیلی جدی نگیرید.`,
     }));
   }
 
@@ -112,10 +112,10 @@ export function typingClaims(s: SignalMap): Claim[] {
   if (s['key.pasted']?.value === true) {
     return [claim({
       id: 'pf.pasted',
-      text: `You *pasted* that, or your browser autofilled it. We were timing the keystrokes, and there weren't any.`,
+      text: `آن را *پیست* کردید یا مرورگر خودکار پرش کرد. زمان کلیدها را میگرفتیم و هیچ کدام نبود.`,
       confidence: 'certain', act: 7, weight: 5,
       evidence: ['key.pasted'],
-      how: `Real typing has 80–200ms gaps between keys. Yours arrived faster than any human hand moves, so it wasn't typed. Sites watch keystroke timing exactly like this to tell people from scripts.`,
+      how: `تایپ واقعی بین کلیدها ۸۰ تا ۲۰۰ میلی ثانیه فاصله دارد. مال شما سریع تر از حرکت دست انسان رسید، پس تایپ نشده بود. سایت ها دقیقا با همین زمان بندی کلید آدم ها را از اسکریپت ها جدا میکنند.`,
     })];
   }
   const wpm = num(s, 'key.wpm');
@@ -127,10 +127,10 @@ export function typingClaims(s: SignalMap): Claim[] {
 
   out.push(claim({
     id: 'pf.typing',
-    text: `You type at about *${wpm} words a minute*${corrections > 2 ? `, and you corrected yourself ${corrections} times` : ''}.`,
+    text: `حدود *${wpm} کلمه در دقیقه* تایپ میکنید${corrections > 2 ? ` و ${corrections} بار خودتان را اصلاح کردید` : ''}.`,
     confidence: 'certain', act: 7, weight: 5,
     evidence: ['key.wpm', 'key.corrections'],
-    how: `We timestamped every key down and up. Speed is the easy part, the valuable part is the rhythm between keys, which is stable enough per person to be used as a login factor by real companies (TypingDNA, BioCatch).`,
+    how: `زمان پایین و بالا رفتن هر کلید را ثبت کردیم. سرعت بخش آسان است؛ بخش ارزشمند ریتم بین کلیدهاست که برای هر نفر آنقدر ثابت است که شرکت های واقعی (TypingDNA، BioCatch) از آن برای ورود استفاده میکنند.`,
   }));
 
   if (cv != null) {
@@ -138,11 +138,11 @@ export function typingClaims(s: SignalMap): Claim[] {
     out.push(claim({
       id: 'pf.rhythm',
       text: steady
-        ? `Your typing rhythm is *steady and practised*, you spend a lot of time at a keyboard.`
-        : `Your typing rhythm is *uneven*, hunt-and-peck, or you were distracted.`,
+        ? `ریتم تایپتان *ثابت و تمرین شده* است؛ وقت زیادی با کیبورد میگذرانید.`
+        : `ریتم تایپتان *ناهموار* است؛ با دو انگشت تایپ میکنید یا حواستان پرت بوده.`,
       confidence: 'guess', act: 7, weight: 4,
       evidence: ['key.rhythmCv', 'key.meanDwell'],
-      how: `The variability in your between-key timing (${cv.toFixed(2)}) is what distinguishes a touch-typist from a two-finger typist. From a full paragraph this alone can re-identify you across sites, from one sentence it's just a hint.${dwell ? ` Your keys were held ~${dwell}ms each.` : ''}`,
+      how: `تغییرپذیری زمان بین کلیدها (${cv.toFixed(2)}) تایپیست ده انگشتی را از تایپیست دو انگشتی جدا میکند. از یک پاراگراف کامل همین به تنهایی میتواند بین سایت ها دوباره شناسایی تان کند، اما از یک جمله فقط نشانه است.${dwell ? ` هر کلید را حدود ${dwell} میلی ثانیه نگه داشتید.` : ''}`,
     }));
   }
   return out;
@@ -154,10 +154,10 @@ export function repeatTyping(timesBefore: number): Claim[] {
   const nth = timesBefore + 1;
   return [claim({
     id: 'pf.repeat',
-    text: `Also, you've *done this typing test before*. This is time number *${nth}*. We remember. It's honestly just fun watching you do it again.`,
+    text: `راستی، *قبلا هم این تست تایپ را انجام داده اید*. این بار *${nth}* است. یادمان مانده. راستش تماشای دوباره اش سرگرم کننده است.`,
     confidence: 'certain', act: 7, weight: 8,
     evidence: [],
-    how: `We tucked a note away the first time you typed, not in a cookie (you'd have cleared that), but across localStorage, IndexedDB, the Cache API and window.name at once. Clearing your cookies didn't touch it. So we knew the moment you started typing that you'd been here before.`,
+    how: `بار اول که تایپ کردید یک یادداشت نگه داشتیم؛ نه در کوکی (آن را پاک میکردید)، بلکه همزمان در localStorage، IndexedDB، Cache API و window.name. پاک کردن کوکی ها به آن کاری نکرد، پس همان لحظه شروع تایپ فهمیدیم قبلا اینجا بوده اید.`,
   })];
 }
 
@@ -259,9 +259,9 @@ export function personalityTheatre(s: SignalMap): Claim[] {
 
   return [claim({
     id: 'pf.ocean',
-    text: `Based on ${dwell} seconds of watching you, here's the read: you're *${a}* and *${b}*. This is roughly as scientific as a horoscope, and we did it anyway, which is exactly the point.`,
+    text: `با ${dwell} ثانیه تماشا، نتیجه این است: شما *${a}* و *${b}* هستید. تقریبا به اندازه فال علمی است و با این حال انجامش دادیم؛ دقیقا نکته همین است.`,
     confidence: 'guess', act: 7, weight: 7,
     evidence: ['bhv.pathEfficiency', 'bhv.hesitationMs', 'bhv.dwellSec'],
-    how: `Full Big Five guess: ${summary}. Real personality inference from digital behaviour is a genuine research field, Kosinski's 2013 study predicted traits from tens of thousands of people with hundreds of data points each. We have a few seconds of one session, which is almost no signal. Ad-tech makes exactly this kind of guess about you constantly, with far more data, and never shows you the result. We're showing you ours, and telling you it's mostly nonsense. Theirs is better, and you never see it.`,
+    how: `حدس کامل Big Five: ${summary}. استنتاج شخصیت از رفتار دیجیتال واقعا زمینه پژوهشی است؛ مطالعه Kosinski در ۲۰۱۳ با صدها داده از ده ها هزار نفر ویژگی ها را پیش بینی کرد. ما فقط چند ثانیه از یک نشست داریم که تقریبا هیچ سیگنالی نیست. فناوری تبلیغات با داده بسیار بیشتر همیشه همین حدس را درباره شما میزند و نتیجه را نشان نمیدهد. ما نتیجه خودمان را نشان میدهیم و میگوییم بیشترش بی معناست. مال آن ها بهتر است و هرگز نمیبینیدش.`,
   })];
 }

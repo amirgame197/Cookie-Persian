@@ -20,7 +20,7 @@ export const softwareFromFonts: Inference = (s) => {
       confidence: hit.confidence,
       act: 5, weight: line.weight,
       evidence: ['fonts.software', 'fonts.list'],
-      how: `We can't list your files, but we can ask the browser which fonts render. "${hit.fonts.slice(0, 3).join('", "')}" are installed, and those ship with ${hit.name}. ${line.aside}`,
+      how: `نمیتوانیم فایل های شما را فهرست کنیم، اما میتوانیم از مرورگر بپرسیم کدام فونت ها رندر میشوند. «${hit.fonts.slice(0, 3).join('»، «')}» نصب هستند و با ${hit.name} می آیند. ${line.aside}`,
     }));
   }
   return out;
@@ -49,10 +49,10 @@ export const osFromFonts: Inference = (s) => {
   if (ver && !isIphone && !isIpad) {
     return [claim({
       id: 'sw.osVersion',
-      text: `You're on *${ver}*.`,
+      text: `سیستم شما *${ver}* است.`,
       confidence: 'likely', act: 2, weight: 5,
       evidence: ['fonts.impliedOSVersion'],
-      how: `${ver} ships a system font that earlier versions don't. We checked for it and it rendered, so we can name not just your OS but its version, without asking.`,
+      how: `${ver} یک فونت سیستمی دارد که نسخه های قبل ندارند. بررسیش کردیم و رندر شد، پس بدون پرسیدن نه فقط سیستم عامل، بلکه نسخه اش را هم میدانیم.`,
     })];
   }
 
@@ -62,7 +62,7 @@ export const osFromFonts: Inference = (s) => {
   const fontBased = !isIphone && !isIpad;
   return [claim({
     id: 'sw.os',
-    text: `Your operating system is *${os}*.`,
+    text: `سیستم عامل شما *${os}* است.`,
     confidence: fontBased ? 'likely' : 'certain', act: 2, weight: 3,
     evidence: fontBased ? ['fonts.impliedOS'] : ['platform.ua', 'hw.touchPoints'],
     how: fontBased
@@ -97,7 +97,7 @@ export const languagePacks: Inference = (s) => {
           : `You've configured multiple language preferences: ${list(names)}.`,
         confidence: 'likely', act: 5, weight: 4,
         evidence: ['platform.languages'],
-        how: `Your browser sends an ordered list of languages you prefer (navigator.languages) on every request, you configured this, it isn't a default. Sites use it to guess where you're from and what you read.`,
+        how: `مرورگر شما در هر درخواست یک فهرست مرتب از زبان های مورد پسندتان (navigator.languages) میفرستد؛ خودتان تنظیمش کرده اید، پیش فرض نیست. سایت ها از آن حدس میزنند کجایی هستید و چه میخوانید.`,
       }));
     }
   }
@@ -106,10 +106,10 @@ export const languagePacks: Inference = (s) => {
   if (count && count > 0) {
     out.push(claim({
       id: 'sw.voices',
-      text: `Your system has *${count} text-to-speech voices* installed, the exact set is a strong fingerprint.`,
+      text: `سیستم شما *${count} صدای تبدیل متن به گفتار* نصب دارد، مجموعه دقیقشان اثرانگشت قوی ای است.`,
       confidence: 'likely', act: 5, weight: 2,
       evidence: ['voices.count', 'voices.hash'],
-      how: `speechSynthesis.getVoices() returns every installed voice. The list varies by OS, OS version, and any voices you've downloaded, enough variation to help pin your exact setup, no permission needed.`,
+      how: `speechSynthesis.getVoices() همه صداهای نصب شده را برمیگرداند. فهرست بر اساس سیستم عامل، نسخه آن و صداهایی که دانلود کرده اید فرق میکند؛ آنقدر که برای شناخت تنظیمات دقیق شما کمک کند، بدون نیاز به دسترسی.`,
     }));
   }
   return out;
@@ -125,18 +125,18 @@ export const codecInference: Inference = (s) => {
   if (has('hevc') && has('dolbyVision')) {
     out.push(claim({
       id: 'sw.appleHw',
-      text: `Your hardware decodes *Dolby Vision*, that's Apple silicon or a high-end setup.`,
+      text: `سخت افزار شما *Dolby Vision* را دیکود میکند؛ یعنی Apple silicon یا یک سیستم رده بالا.`,
       confidence: 'likely', act: 3, weight: 4,
       evidence: ['codecs.support'],
-      how: `Dolby Vision and hardware HEVC decode together point at recent Apple hardware or a licensed premium chip. We asked what your browser can play; it told us.`,
+      how: `Dolby Vision و دیکود سخت افزاری HEVC کنار هم به سخت افزار جدید Apple یا یک چیپ ممتاز دارای مجوز اشاره میکنند. از مرورگر پرسیدیم چه چیزی پخش میکند؛ خودش گفت.`,
     }));
   } else if (has('av1')) {
     out.push(claim({
       id: 'sw.av1',
-      text: `You can hardware-decode *AV1*, recent, capable silicon.`,
+      text: `میتوانید *AV1* را سخت افزاری دیکود کنید؛ یعنی سیلیکون جدید و توانمند.`,
       confidence: 'guess', act: 3, weight: 2,
       evidence: ['codecs.support'],
-      how: `AV1 hardware decode only exists on recent GPUs and SoCs (Intel 11th-gen+, RTX 30-series+, Apple M-series). So your machine isn't old.`,
+      how: `دیکود سخت افزاری AV1 فقط در GPU و SoCهای جدید وجود دارد (Intel نسل ۱۱ به بعد، RTX سری ۳۰ به بعد، Apple M). پس دستگاه شما قدیمی نیست.`,
     }));
   }
   return out;
@@ -148,24 +148,24 @@ function softwareLine(hit: SoftwareHit): { text: string; weight: number; aside: 
   const name = hit.name.toLowerCase();
   if (name.includes('latex') || name.includes('tex')) {
     return {
-      text: `You've got *LaTeX's fonts* installed. Academic papers, or a maths-heavy day job.`,
+      text: `*فونت های LaTeX* را نصب دارید. مقاله های دانشگاهی، یا یک کار پر از ریاضی.`,
       weight: 8,
-      aside: `Almost nobody outside research and academia has these, it's one of the most revealing fonts you can leak.`,
+      aside: `تقریبا هیچ کس بیرون از پژوهش و دانشگاه این ها را ندارد؛ یکی از لو دهنده ترین فونت هایی است که میتوانید نشت بدهید.`,
     };
   }
   if (name.includes('adobe')) {
-    return { text: `You have *Adobe's fonts* installed.`, weight: 5, aside: `Design or photography software put them there, though fonts stick around long after the app is gone.` };
+    return { text: `*فونت های Adobe* را نصب دارید.`, weight: 5, aside: `نرم افزار طراحی یا عکاسی آن ها را آورده، هرچند فونت ها مدت ها بعد از پاک شدن برنامه میمانند.` };
   }
   if (name.includes('office')) {
-    return { text: `*Microsoft Office's fonts* are on this machine.`, weight: 3, aside: `Fonts outlive the software that installed them, so this means Office was here at some point, not necessarily that you still use it.` };
+    return { text: `*فونت های Microsoft Office* روی این دستگاه هستند.`, weight: 3, aside: `فونت ها از نرم افزاری که نصبشان کرده بیشتر میمانند، پس یعنی Office یک زمانی اینجا بوده، نه لزوما اینکه هنوز از آن استفاده میکنید.` };
   }
   if (name.includes('developer') || name.includes('coding')) {
-    return { text: `You have programmer fonts installed, you *write code*.`, weight: 6, aside: `These fonts don't come with any OS; you went and installed them.` };
+    return { text: `فونت های برنامه نویسی نصب دارید، *کد میزنید*.`, weight: 6, aside: `این فونت ها با هیچ سیستم عاملی نمی آیند؛ خودتان رفتید نصبشان کردید.` };
   }
   if (name.includes('japanese') || name.includes('chinese') || name.includes('korean') || name.includes('asian') || name.includes('language')) {
-    return { text: `You have *${hit.name}* support installed.`, weight: 5, aside: `That's a strong hint about a language you read or write.` };
+    return { text: `پشتیبانی *${hit.name}* را نصب دارید.`, weight: 5, aside: `این نشانه قوی ای از زبانی است که میخوانید یا مینویسید.` };
   }
-  return { text: `You have *${hit.name}* installed.`, weight: 3, aside: '' };
+  return { text: `*${hit.name}* را نصب دارید.`, weight: 3, aside: '' };
 }
 
 const LANG: Record<string, string> = {

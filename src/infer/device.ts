@@ -30,11 +30,11 @@ export const deviceModel: Inference = (s) => {
     out.push(claim({
       id: 'device.model',
       // The label already carries its own article ("an iPhone …").
-      text: `You're reading this on ${startsWithArticle(model) ? model : `a ${model}`}.`,
+      text: `این را روی ${model} میخوانید.`,
       confidence: 'likely',
       act: 3, weight: 8,
       evidence: ['display.resolution', 'display.pixelRatio'],
-      how: `${w}×${h} logical pixels at a ${dpr}× device pixel ratio is ${physical(w, h, dpr)} physical pixels, a resolution Apple ships on a single model line (sometimes a couple that share a panel). No cookie, no permission: the screen just tells us.`,
+      how: `${w}×${h} پیکسل منطقی با نسبت پیکسل دستگاه ${dpr}×، یعنی ${physical(w, h, dpr)} پیکسل واقعی؛ وضوحی که Apple روی یک خط مدل (گاهی دو مدل با پنل مشترک) میدهد. نه کوکی خواستیم نه دسترسی؛ خود صفحه گفت.`,
     }));
   }
 
@@ -47,10 +47,10 @@ export const deviceModel: Inference = (s) => {
     if (scale) {
       out.push(claim({
         id: 'device.winScale',
-        text: `Your interface is scaled to about *${scale.pct}%*, not the default.`,
+      text: `رابط شما حدود *${scale.pct}%* مقیاس دارد، پیش فرض نیست.`,
         confidence: 'guess', act: 3, weight: 4,
         evidence: ['display.pixelRatio'],
-        how: `Your device pixel ratio is ${dpr}. That's your screen's hardware density (${scale.base}×) multiplied by your UI scaling, which works out to roughly ${scale.pct}%. It could be an OS display-scaling setting or browser zoom — we can tell it isn't the default, but not which one changed it.`,
+        how: `نسبت پیکسل دستگاه شما ${dpr} است. این تراکم سخت افزاری صفحه (${scale.base}×) ضرب در مقیاس رابط شماست و حدود ${scale.pct}% میشود. میتواند تنظیم مقیاس نمایش سیستم عامل یا زوم مرورگر باشد؛ میفهمیم پیش فرض نیست، اما نه اینکه کدام عوضش کرده.`,
       }));
     }
   }
@@ -74,7 +74,7 @@ export const gpuTier: Inference = (s) => {
       confidence: pretty.exact ? 'certain' : 'likely',
       act: 3, weight: 9,
       evidence: ['gpu.renderer'],
-      how: `WebGL exposes the raw GPU string through WEBGL_debug_renderer_info, here, "${truncate(raw, 90)}". Chrome hands this over with no permission prompt. It names your exact graphics hardware in the first frame.`,
+      how: `WebGL رشته خام GPU را از WEBGL_debug_renderer_info بیرون میدهد، اینجا: «${truncate(raw, 90)}». Chrome بدون پیام دسترسی آن را میدهد. در همان فریم اول سخت افزار گرافیکی دقیق شما را نام میبرد.`,
     }));
   }
 
@@ -82,10 +82,10 @@ export const gpuTier: Inference = (s) => {
   if (s['gpu.rendererMismatch']?.value === true) {
     out.push(claim({
       id: 'device.gpuSpoof',
-      text: `And you're *faking it*, the GPU your page reports isn't the one your browser's background threads report.`,
+      text: `و دارید *جعلش میکنید*، GPUای که صفحه میگوید همان نیست که تردهای پس زمینه مرورگر میگویند.`,
       confidence: 'certain', act: 4, weight: 9,
       evidence: ['gpu.renderer', 'gpu.workerRenderer'],
-      how: `We read the GPU string twice: once on the page, once inside a Web Worker. A real browser returns the same value both times. Yours doesn't, which means a privacy tool or anti-detect browser is rewriting it on the main thread but forgot the Worker. The lie is the fingerprint.`,
+      how: `رشته GPU را دو بار خواندیم: یک بار در صفحه و یک بار داخل Web Worker. مرورگر واقعی هر دو بار یک مقدار میدهد. مال شما نه؛ یعنی ابزار حریم خصوصی یا مرورگر ضد تشخیص آن را در ترد اصلی بازنویسی کرده و Worker را فراموش کرده. همین دروغ اثرانگشت است.`,
     }));
   }
 
@@ -97,10 +97,10 @@ export const multiMonitor: Inference = (s) => {
   if (s['meta.multiMonitor']?.value !== true) return [];
   return [claim({
     id: 'device.screens',
-    text: `You're running *more than one screen*.`,
+      text: `*بیشتر از یک نمایشگر* دارید.`,
     confidence: 'certain', act: 3, weight: 4,
     evidence: ['meta.multiMonitor'],
-    how: `screen.isExtended returns true when a second display is attached, no permission prompt, just a boolean any site can read. It doesn't say what's on the other screen. Yet.`,
+    how: `وقتی نمایشگر دوم وصل باشد screen.isExtended مقدار true میدهد؛ بدون پیام دسترسی، فقط یک boolean که هر سایتی میخواند. نمیگوید روی نمایشگر دیگر چیست. فعلا.`,
   })];
 };
 
@@ -112,18 +112,18 @@ export const displayInference: Inference = (s) => {
   if (hz >= 118 && hz <= 122) {
     out.push(claim({
       id: 'device.promotion',
-      text: `Your screen refreshes *120 times a second*, a ProMotion or high-refresh panel.`,
+      text: `نمایشگر شما *۱۲۰ بار در ثانیه* تازه میشود، پنل ProMotion یا نرخ تازه سازی بالا.`,
       confidence: 'likely', act: 3, weight: 5,
       evidence: ['display.refreshHz'],
-      how: `We counted how often the browser could paint a frame. It settled at ${hz}Hz, you paid for the nice screen.`,
+      how: `شمردیم مرورگر چند بار میتواند فریم بکشد. روی ${hz}Hz ثابت شد؛ برای نمایشگر خوب پول داده اید.`,
     }));
   } else if (hz >= 140) {
     out.push(claim({
       id: 'device.gamingMonitor',
-      text: `Your monitor runs at *${hz}Hz*. That's a gaming display.`,
+      text: `نمایشگر شما با *${hz}Hz* کار میکند. این یک نمایشگر گیمینگ است.`,
       confidence: 'likely', act: 3, weight: 6,
       evidence: ['display.refreshHz'],
-      how: `Frame-paint timing clocked your display at ${hz}Hz. Nothing but a dedicated gaming monitor runs that fast.`,
+      how: `زمان بندی کشیدن فریم، نمایشگر را ${hz}Hz نشان داد. غیر از مانیتور مخصوص گیم چیزی اینقدر سریع کار نمیکند.`,
     }));
   }
   return out;
@@ -148,10 +148,10 @@ export const peripherals: Inference = (s) => {
     if (!parts.length) return [];
     return [claim({
       id: 'device.peripherals',
-      text: `You have ${parts.join(' and ')} plugged in right now.`,
+      text: `همین الان ${parts.join(' و ')} وصل دارید.`,
       confidence: 'certain', act: 3, weight: 6,
       evidence: ['hw.cameras', 'hw.microphones', 'hw.speakers', 'hw.deviceLabels'],
-      how: `enumerateDevices() lists every camera, mic and speaker attached. You've granted this browser device access at some point, so we get the real tally and the names too.`,
+      how: `enumerateDevices() همه دوربین ها، میکروفون ها و اسپیکرهای وصل را فهرست میکند. یک زمانی به مرورگر اجازه دستگاه داده اید، پس تعداد واقعی و اسم هایشان را هم میگیریم.`,
     })];
   }
 
@@ -162,10 +162,10 @@ export const peripherals: Inference = (s) => {
   if (!kinds.length) return [];
   return [claim({
     id: 'device.peripherals',
-    text: `You have ${kinds.join(' and ')} attached.`,
+    text: `${kinds.join(' و ')} وصل دارید.`,
     confidence: 'likely', act: 3, weight: 5,
     evidence: ['hw.cameras', 'hw.microphones', 'hw.speakers', 'hw.deviceLabels'],
-    how: `enumerateDevices() reveals which *kinds* of device you have without any permission prompt. It won't give the real number or the names until you grant access, so we won't pretend to know how many, only that they're there.`,
+    how: `enumerateDevices() بدون پیام دسترسی نشان میدهد چه *نوع* دستگاهی دارید. تا دسترسی ندهید تعداد واقعی یا اسم ها را نمیدهد، پس وانمود نمیکنیم چند تا هستند؛ فقط میدانیم وجود دارند.`,
   })];
 };
 

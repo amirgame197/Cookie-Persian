@@ -1,150 +1,150 @@
-# Signal ID contract
+# قرارداد شناسه سیگنال
 
-Every probe emits `Signal` objects (see `src/types.ts`). Inference modules read them
-by **exact id**. Both sides are written independently, so this file is the contract.
-If a probe cannot measure something it simply omits the signal (or emits it with
-`error` set) — inference must tolerate every id being absent.
+هر کاوشگر (probe) اشیاء `Signal` منتشر میکند (رجوع به `src/types.ts`). ماژول های استنتاج آنها را با **شناسه دقیق** میخوانند. هر دو طرف مستقل نوشته شده اند، بنابراین این فایل قرارداد است. اگر کاوشگری نتواند چیزی را اندازه بگیرد، به سادگی سیگنال را حذف میکند (یا آن را با `error` تنظیم شده منتشر می کند) - استنتاج باید نبود هر شناسه ای را تحمل کند.
 
-## Already implemented (`src/probes/core.ts`)
+## پیاده سازی شده (`src/probes/core.ts`)
 
-| id | meaning |
+| id | معنا |
 |---|---|
-| `platform.ua` | User-Agent string |
+| `platform.ua` | رشته User-Agent |
 | `platform.platform` | `navigator.platform` |
-| `platform.languages` | `navigator.languages` array |
-| `platform.arch` / `platform.bitness` | UA-CH architecture / bitness |
-| `platform.model` | UA-CH device model (Android) |
-| `platform.osVersion` | UA-CH platform version |
-| `platform.browserVersions` | UA-CH full version list |
-| `platform.uadPlatform` | UA-CH platform name |
-| `platform.mobile` | UA-CH mobile boolean |
+| `platform.languages` | آرایه `navigator.languages` |
+| `platform.arch` / `platform.bitness` | معماری / بیتی UA-CH |
+| `platform.model` | مدل دستگاه UA-CH (اندروید) |
+| `platform.osVersion` | نسخه پلتفرم UA-CH |
+| `platform.browserVersions` | فهرست نسخه کامل UA-CH |
+| `platform.uadPlatform` | نام پلتفرم UA-CH |
+| `platform.mobile` | بولی موبایل UA-CH |
 | `platform.webdriver` | `navigator.webdriver` |
-| `platform.dnt` / `platform.gpc` | Do Not Track / Global Privacy Control |
+| `platform.dnt` / `platform.gpc` | عدم ردیابی / کنترل حریم خصوصی سراسری |
 | `platform.pdfViewer` | `navigator.pdfViewerEnabled` |
 | `display.resolution` | `[width, height]` |
 | `display.available` | `[availWidth, availHeight]` |
 | `display.pixelRatio` | `devicePixelRatio` |
 | `display.colorDepth`, `display.viewport`, `display.orientation` | |
-| `display.chromeHeight` / `display.chromeWidth` | screen minus avail — OS chrome size |
-| `display.refreshHz` | measured refresh rate |
+| `display.chromeHeight` / `display.chromeWidth` | screen منهای avail - اندازه حاشیه سیستم عامل |
+| `display.refreshHz` | نرخ نوسازی اندازه گیری شده |
 | `hw.cores` | `hardwareConcurrency` |
-| `hw.memory` | `deviceMemory` (GB, bucketed) |
+| `hw.memory` | `deviceMemory` (گیگابایت، دسته بندی شده) |
 | `hw.touchPoints`, `hw.pointerCoarse`, `hw.hover` | |
 | `hw.netType`, `hw.downlink`, `hw.rtt`, `hw.saveData` | Network Information API |
-| `hw.cameras`, `hw.microphones`, `hw.speakers` | device counts (no permission) |
-| `hw.deviceLabels` | whether labels were readable |
-| `hw.batteryLevel`, `hw.charging` | Chrome only |
+| `hw.cameras`, `hw.microphones`, `hw.speakers` | تعداد دستگاه ها (بدون اجازه) |
+| `hw.deviceLabels` | آیا برچسب ها خوانا بودند |
+| `hw.batteryLevel`, `hw.charging` | فقط کروم |
 | `env.timezone`, `env.tzOffset`, `env.locale` | |
 | `env.calendar`, `env.numbering`, `env.currency`, `env.localTime` | |
 | `env.colorScheme`, `env.reducedMotion`, `env.reducedTransparency` | |
 | `env.contrast`, `env.forcedColors`, `env.invertedColors` | |
 | `env.monochrome`, `env.dynamicRange`, `env.colorGamut` | |
-| `codecs.support` | map of codec → canPlayType result |
+| `codecs.support` | نگاشت کدک به نتیجه canPlayType |
 | `codecs.widevine`, `codecs.hash` | |
-| `voices.count`, `voices.langs`, `voices.hash`, `voices.local` | speech synthesis voices |
+| `voices.count`, `voices.langs`, `voices.hash`, `voices.local` | صداهای سنتز گفتار |
 
-## To be implemented
+## در دست پیاده سازی
 
 ### `src/probes/render.ts`
-| id | meaning |
+| id | معنا |
 |---|---|
-| `gpu.vendor` | WebGL `UNMASKED_VENDOR_WEBGL` |
-| `gpu.renderer` | WebGL `UNMASKED_RENDERER_WEBGL` — the raw string |
-| `gpu.workerRenderer` | same value read inside a Worker (spoof cross-check) |
-| `gpu.rendererMismatch` | boolean: main thread and worker disagree |
-| `gpu.webgpuVendor`, `gpu.webgpuArch`, `gpu.webgpuDesc` | `GPUAdapterInfo` fields |
-| `gpu.params` | selected WebGL parameter map (max texture size etc.) |
-| `gpu.extensions` | supported WebGL extension list |
-| `canvas.hash` | 2D canvas render hash |
-| `canvas.emojiHash` | emoji-only render hash (OS version signal) |
-| `canvas.textMetrics` | `TextMetrics` for a reference string |
-| `audio.hash` | OfflineAudioContext oscillator+compressor hash |
+| `gpu.vendor` | `UNMASKED_VENDOR_WEBGL` در WebGL |
+| `gpu.renderer` | `UNMASKED_RENDERER_WEBGL` در WebGL - رشته خام |
+| `gpu.workerRenderer` | همان مقدار خوانده شده درون یک Worker (بررسی متقابل جعل) |
+| `gpu.rendererMismatch` | بولی: نخ اصلی و Worker اختلاف دارند |
+| `gpu.webgpuVendor`, `gpu.webgpuArch`, `gpu.webgpuDesc` | فیلدهای `GPUAdapterInfo` |
+| `gpu.params` | نگاشت پارامترهای انتخابی WebGL (حداکثر اندازه بافت و غیره) |
+| `gpu.extensions` | فهرست افزونه های پشتیبانی شده WebGL |
+| `canvas.hash` | هش رندر بوم دوبعدی |
+| `canvas.emojiHash` | هش رندر فقط ایموجی (سیگنال نسخه سیستم عامل) |
+| `canvas.textMetrics` | `TextMetrics` برای رشته مرجع |
+| `audio.hash` | هش OfflineAudioContext نوسان ساز + فشرده ساز |
 | `audio.sampleRate` | |
-| `domrect.hash` | `getBoundingClientRect` geometry hash |
+| `domrect.hash` | هش هندسه `getBoundingClientRect` |
 
 ### `src/probes/fonts.ts`
-| id | meaning |
+| id | معنا |
 |---|---|
-| `fonts.list` | array of detected font names |
-| `fonts.count` | how many detected |
-| `fonts.hash` | stable hash of the list |
+| `fonts.list` | آرایه نام فونت های شناسایی شده |
+| `fonts.count` | چند فونت شناسایی شد |
+| `fonts.hash` | هش پایدار فهرست |
 | `fonts.impliedOS` | `'windows' \| 'macos' \| 'linux' \| 'android' \| 'unknown'` |
-| `fonts.impliedOSVersion` | e.g. `'Windows 11'` when a version-specific font is present |
-| `fonts.software` | array of `{ name, fonts, confidence }` inferred installed software |
+| `fonts.impliedOSVersion` | مثلا `'Windows 11'` وقتی فونت مختص نسخه حاضر باشد |
+| `fonts.software` | آرایه `{ name, fonts, confidence }` نرم افزار نصب شده استنباط شده |
 
 ### `src/probes/lies.ts`
-| id | meaning |
+| id | معنا |
 |---|---|
-| `lies.records` | array of `{ api, reason }` tamper findings |
-| `lies.count` | total |
-| `lies.tamperedApis` | array of API names that failed native checks |
-| `lies.clientLitter` | window globals present that a clean nested iframe lacks |
-| `lies.timerCoarsened` | timer precision is rounded (Firefox RFP / Tor) |
-| `lies.brave` | Brave detected |
-| `lies.braveMode` | `'standard' \| 'aggressive'` if determinable |
-| `lies.pluginInconsistency` | plugins/mimeTypes cross-check failed |
-| `lies.uaPlatformMismatch` | UA-claimed platform disagrees with feature-implied platform |
-| `lies.featurePlatform` | platform implied by the JS feature matrix |
-| `lies.jsEngine` | `'v8' \| 'spidermonkey' \| 'javascriptcore'` from error-message text |
+| `lies.records` | آرایه `{ api, reason }` یافته های دستکاری |
+| `lies.count` | مجموع |
+| `lies.tamperedApis` | آرایه نام API هایی که بررسی های بومی را رد کردند |
+| `lies.clientLitter` | متغیرهای سراسری window حاضر که یک iframe تودرتو تمیز فاقد آنها است |
+| `lies.timerCoarsened` | دقت تایمر گرد شده است (Firefox RFP / Tor) |
+| `lies.brave` | شناسایی Brave |
+| `lies.braveMode` | `'standard' \| 'aggressive'` در صورت امکان تعیین |
+| `lies.pluginInconsistency` | بررسی متقابل plugins/mimeTypes شکست خورد |
+| `lies.uaPlatformMismatch` | پلتفرم ادعاشده توسط UA با پلتفرم استنباط شده از ویژگی ها ناسازگار است |
+| `lies.featurePlatform` | پلتفرم استنباط شده توسط ماتریس ویژگی های JS |
+| `lies.jsEngine` | `'v8' \| 'spidermonkey' \| 'javascriptcore'` از متن پیام خطا |
 
-### `src/probes/localnet.ts` — TIER 2
-| id | meaning |
+### `src/probes/localnet.ts` - سطح ۲
+| id | معنا |
 |---|---|
-| `localnet.openPorts` | array of `{ port, service, ms }` that responded as reachable |
-| `localnet.scanned` | how many ports were probed |
-| `localnet.method` | which timing method was used |
-| `localnet.blocked` | true if the browser appears to gate the probe entirely |
+| `localnet.openPorts` | آرایه `{ port, service, ms }` که به عنوان در دسترس پاسخ دادند |
+| `localnet.scanned` | چند پورت کاوش شد |
+| `localnet.method` | کدام روش زمان بندی استفاده شد |
+| `localnet.blocked` | true اگر مرورگر به کلی کاوش را مسدود کند |
 
-### `src/probes/apps.ts` — TIER 2
-| id | meaning |
+### `src/probes/apps.ts` - سطح ۲
+| id | معنا |
 |---|---|
-| `apps.installed` | array of app names detected via protocol handlers |
-| `apps.probed` | array of schemes attempted |
-| `apps.reliable` | boolean — false where the browser throttles probing |
+| `apps.installed` | آرایه نام برنامه های شناسایی شده از طریق کنترل کننده های پروتکل |
+| `apps.probed` | آرایه طرح هایی که تلاش شد |
+| `apps.reliable` | بولی - false جایی که مرورگر کاوش را محدود می کند |
 
-### `src/probes/extensions.ts` — TIER 2
-| id | meaning |
+### `src/probes/extensions.ts` - سطح ۲
+| id | معنا |
 |---|---|
-| `ext.detected` | array of `{ name, id }` |
-| `ext.adblock` | ad blocker present |
-| `ext.adblockName` | which one, when determinable |
+| `ext.detected` | آرایه `{ name, id }` |
+| `ext.adblock` | مسدودکننده تبلیغ حاضر |
+| `ext.adblockName` | کدام یک، وقتی قابل تعیین باشد |
 
 ### `src/probes/incognito.ts`
-| id | meaning |
+| id | معنا |
 |---|---|
-| `incognito.private` | boolean |
-| `incognito.method` | which heuristic decided it |
-| `incognito.quota` | `navigator.storage.estimate()` quota |
+| `incognito.private` | بولی |
+| `incognito.method` | کدام اکتشافی تصمیم گرفت |
+| `incognito.quota` | سهمیه `navigator.storage.estimate()` |
 
 ### `src/probes/automation.ts`
-| id | meaning |
+| id | معنا |
 |---|---|
-| `bot.headless` | boolean |
+| `bot.headless` | بولی |
 | `bot.score` | 0..1 |
-| `bot.reasons` | array of strings |
-| `bot.vm` | virtual machine detected (from GPU renderer) |
+| `bot.reasons` | آرایه رشته ها |
+| `bot.vm` | ماشین مجازی شناسایی شده (از GPU renderer) |
 
-### `src/probes/behavior.ts` — streams over time
-| id | meaning |
+### `src/probes/behavior.ts` - جریان ها در طول زمان
+| id | معنا |
 |---|---|
 | `behavior.pointer` | `'mouse' \| 'trackpad' \| 'touch' \| 'none'` |
-| `behavior.dwellMs` | time on page so far |
+| `behavior.dwellMs` | زمان حضور در صفحه تاکنون |
 | `behavior.scrollDepth` | 0..1 |
-| `behavior.moveEntropy` | jitter measure of pointer path |
-| `behavior.idle` | whether the user has been idle |
+| `behavior.moveEntropy` | معیار لرزش مسیر اشاره گر |
+| `behavior.idle` | آیا کاربر بیکار بوده است |
 
-### Edge-injected (`edge.*`, set by `src/main.ts` from `/api/context`)
+### Edge-injected (`edge.*`، تنظیم شده توسط `src/main.ts` از `/api/context`)
 `edge.ip`, `edge.city`, `edge.region`, `edge.country`, `edge.postalCode`,
 `edge.latitude`, `edge.longitude`, `edge.timezone`, `edge.asn`, `edge.asOrg`,
 `edge.colo`, `edge.tlsVersion`, `edge.tlsCipher`, `edge.tlsHelloLength`,
 `edge.httpProtocol`, `edge.acceptLanguage`, `edge.headerOrder`, `edge.clientHints`,
 `edge.tcpRtt`
 
-## Claim conventions
+## قراردادهای ادعا
 
-- Second person, present tense, plain English. No jargon in `text`.
-- Wrap the single most surprising noun phrase in `*asterisks*` for highlight.
-- `act` picks the section (see `src/ui/dossier.ts` `ACTS`).
-- `weight` 0–10; higher lands later within the act and gets a longer beat.
-- `how` explains the technique in one or two sentences, for the drawer.
-- Never assert a `certain` claim from a `guess`-grade signal.
+- دوم شخص، زمان حال، انگلیسی ساده. بدون اصطلاح فنی در `text`.
+- تنها عبارت اسمی غافلگیر کننده را برای برجسته سازی در `*asterisks*` قرار دهید.
+- `act` بخش را انتخاب می کند (رجوع به `src/ui/dossier.ts` `ACTS`).
+- `weight` از ۰ تا ۱۰؛ وزن بالاتر دیرتر در همان پرده قرار می گیرد و ضرباهنگ طولانی تری می گیرد.
+- `how` تکنیک را در یک یا دو جمله برای کاربر توضیح می دهد.
+- هرگز یک ادعای `certain` را از سیگنال با درجه `guess` ارائه ندهید.
+
+<br>
+##### This section is translated by AI.

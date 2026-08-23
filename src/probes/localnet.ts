@@ -103,11 +103,11 @@ async function mapWithConcurrency<T, R>(
  */
 export const localNetProbe: Probe = {
   id: 'localnet',
-  title: 'Local network',
+  title: 'شبکه داخلی',
   tier: 2,
   async run(ctx) {
     if (!ctx.consented) {
-      return [sig('localnet.blocked', 'Local network scan', true, { error: 'no consent' })];
+      return [sig('localnet.blocked', 'اسکن شبکه داخلی', true, { error: 'دسترسی داده نشد' })];
     }
 
     const out: Signal[] = [];
@@ -126,15 +126,15 @@ export const localNetProbe: Probe = {
       // makes the timing signal meaningless.
       const blocked = calibration.ok || calibration.timedOut || baselineMs > 800;
 
-      out.push(sig('localnet.method', 'Detection method',
+      out.push(sig('localnet.method', 'روش تشخیص',
         'TCP connect timing via fetch(no-cors): closed ports reject fast (RST); open ports hang past the calibrated baseline before CORS blocks the read.',
-        { display: `baseline ${Math.round(baselineMs)}ms on port ${calibrationPort}` }));
+        { display: `مبنا ${Math.round(baselineMs)} میلی ثانیه روی پورت ${calibrationPort}` }));
 
       if (blocked) {
-        out.push(sig('localnet.blocked', 'Scan blocked', true,
-          { display: 'browser refused/hung uniformly; timing signal unusable' }));
-        out.push(sig('localnet.scanned', 'Ports scanned', 0));
-        out.push(sig('localnet.openPorts', 'Open ports', []));
+        out.push(sig('localnet.blocked', 'اسکن مسدود شد', true,
+          { display: 'مرورگر همه را یک جور رد یا معطل کرد؛ سیگنال زمان قابل استفاده نیست' }));
+        out.push(sig('localnet.scanned', 'پورت های اسکن شده', 0));
+        out.push(sig('localnet.openPorts', 'پورت های باز', []));
         return out;
       }
 
@@ -151,16 +151,16 @@ export const localNetProbe: Probe = {
         .filter((r) => r.ok || r.timedOut || r.ms > threshold)
         .map((r) => ({ port: r.port, service: r.service, ms: Math.round(r.ms) }));
 
-      out.push(sig('localnet.scanned', 'Ports scanned', CANDIDATES.length));
-      out.push(sig('localnet.openPorts', 'Open ports (heuristic)', openPorts, {
+      out.push(sig('localnet.scanned', 'پورت های اسکن شده', CANDIDATES.length));
+      out.push(sig('localnet.openPorts', 'پورت های باز (حدسی)', openPorts, {
         display: openPorts.length
           ? openPorts.map((p) => `${p.port} (${p.service})`).join(', ')
-          : 'none detected',
+          : 'چیزی پیدا نشد',
         entropy: openPorts.length ? 3 : 0,
       }));
-      out.push(sig('localnet.blocked', 'Scan blocked', false));
+      out.push(sig('localnet.blocked', 'اسکن مسدود شد', false));
     } catch (e) {
-      out.push(sig('localnet.blocked', 'Scan blocked', true, { error: String(e) }));
+      out.push(sig('localnet.blocked', 'اسکن مسدود شد', true, { error: String(e) }));
     }
 
     return out;

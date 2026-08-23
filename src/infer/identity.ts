@@ -53,10 +53,10 @@ export const lieDetection: Inference = (s) => {
   if (tampered.length >= 2) {
     out.push(claim({
       id: 'lie.tampered',
-      text: `Something on your machine is *rewriting your browser's own functions* to hide you, we can see the fingerprints of the tampering on ${tampered.length} of them.`,
+      text: `چیزی روی دستگاهتان برای پنهان کردنتان *توابع خود مرورگر را بازنویسی میکند*؛ اثرانگشت دستکاری را روی ${tampered.length} تا میبینیم.`,
       confidence: 'certain', act: 4, weight: 8,
       evidence: ['lies.tamperedApis', 'lies.records'],
-      how: `Native browser functions have a fixed signature: calling toString() on them returns "[native code]". A privacy extension or anti-detect browser that fakes your fingerprint has to replace those functions, and the replacements don't match. We checked, and ${tampered.slice(0, 3).join(', ')} failed. The attempt to hide is itself a signal.`,
+      how: `توابع اصلی مرورگر امضای ثابتی دارند: صدا زدن toString() رویشان «[native code]» برمیگرداند. افزونه حریم خصوصی یا مرورگر ضد تشخیص برای جعل اثرانگشت باید جایگزینشان کند و جایگزین ها جور درنمی آیند. بررسی کردیم و ${tampered.slice(0, 3).join('، ')} رد شدند. خود تلاش برای پنهان شدن یک سیگنال است.`,
     }));
   }
 
@@ -74,20 +74,20 @@ export const lieDetection: Inference = (s) => {
   if (uaOS && fontOS && fontOS !== 'unknown' && uaFam && fontFam && uaFam !== fontFam && corroborated) {
     out.push(claim({
       id: 'lie.platform',
-      text: `Your User-Agent says *${cap(uaOS)}*, but your installed fonts are *${cap(fontOS)}*'s. One of those is lying, and it isn't the fonts.`,
+      text: `User-Agent شما میگوید *${cap(uaOS)}*، اما فونت های نصب شده مال *${cap(fontOS)}* هستند. یکی دارد دروغ میگوید و فونت ها نیستند.`,
       confidence: 'likely', act: 4, weight: 8,
       evidence: ['fonts.impliedOS', 'platform.ua'],
-      how: `The User-Agent string is trivial to fake, so we corroborate it. Certain fonts only ship on certain operating systems, and yours are ${cap(fontOS)}'s, not the ${cap(uaOS)} your User-Agent claims.`,
+      how: `جعل رشته User-Agent خیلی ساده است، برای همین با چیز دیگر تاییدش میکنیم. بعضی فونت ها فقط با سیستم عامل های خاص می آیند و مال شما برای ${cap(fontOS)} است، نه ${cap(uaOS)}ای که User-Agent ادعا میکند.`,
     }));
   }
 
   if (s['lies.brave']?.value === true) {
     out.push(claim({
       id: 'lie.brave',
-      text: `You're using *Brave*, you didn't tell us, but the browser gives itself away.`,
+      text: `از *Brave* استفاده میکنید؛ نگفتید، اما مرورگر خودش لو داد.`,
       confidence: 'certain', act: 4, weight: 5,
       evidence: ['lies.brave'],
-      how: `Brave ships a hidden navigator.brave API and a characteristic set of anti-fingerprinting behaviours. Ironically, the fingerprinting defenses are themselves a fingerprint.`,
+      how: `Brave یک API پنهان navigator.brave و رفتارهای مشخص ضد اثرانگشت دارد. طنز ماجرا اینجاست که دفاع های اثرانگشت خودشان اثرانگشتند.`,
     }));
   }
 
@@ -95,10 +95,10 @@ export const lieDetection: Inference = (s) => {
   if (litter.length >= 3) {
     out.push(claim({
       id: 'lie.litter',
-      text: `Oh, and your extensions leave *litter* all over the page, ${litter.length} global variables a clean browser doesn't have. You might as well be carrying a bright red balloon around the internet.`,
+      text: `راستی افزونه هایتان همه جای صفحه *ردپا* میگذارند؛ ${litter.length} متغیر سراسری که مرورگر تمیز ندارد. انگار یک بادکنک قرمز روشن در اینترنت دست گرفته اید.`,
       confidence: 'likely', act: 4, weight: 5,
       evidence: ['lies.clientLitter'],
-      how: `We compared your window object against a pristine one inside a nested iframe your extensions can't reach. The extra globals (${litter.slice(0, 3).join(', ')}…) were injected by extensions running right now.`,
+      how: `شی window شما را با یک نمونه تمیز داخل iframe تو در تو که افزونه هایتان به آن نمیرسند مقایسه کردیم. متغیرهای اضافه (${litter.slice(0, 3).join('، ')}…) را افزونه هایی که همین الان اجرا میشوند تزریق کرده اند.`,
     }));
   }
 
@@ -112,19 +112,19 @@ export const automation: Inference = (s) => {
     const reasons = (s['bot.reasons']?.value as string[] | undefined) ?? [];
     out.push(claim({
       id: 'id.bot',
-      text: `You're not a person, you're an *automated browser*. Nice try.`,
+      text: `آدم نیستید، یک *مرورگر خودکار* هستید. تلاش خوبی بود.`,
       confidence: 'likely', act: 4, weight: 6,
       evidence: ['bot.score', 'bot.reasons'],
-      how: `Headless and automated browsers leak tells: ${reasons.slice(0, 2).join('; ') || 'webdriver flags, missing chrome runtime, software rendering'}. You tripped ${reasons.length} of them.`,
+      how: `مرورگرهای headless و خودکار نشانه لو میدهند: ${reasons.slice(0, 2).join('؛ ') || 'فلگ های webdriver، نبودن chrome runtime، رندر نرم افزاری'}. ${reasons.length} تایش را فعال کردید.`,
     }));
   }
   if (s['bot.vm']?.value === true) {
     out.push(claim({
       id: 'id.vm',
-      text: `You're inside a *virtual machine*.`,
+      text: `داخل یک *ماشین مجازی* هستید.`,
       confidence: 'likely', act: 4, weight: 5,
       evidence: ['gpu.renderer', 'bot.vm'],
-      how: `Your GPU renderer string names a virtual display adapter (VMware / VirtualBox / Parallels / software rasteriser). Real hardware doesn't report that.`,
+      how: `رشته رندر کننده GPU شما یک آداپتور نمایش مجازی را نام میبرد (VMware / VirtualBox / Parallels / رسترکننده نرم افزاری). سخت افزار واقعی چنین چیزی گزارش نمیدهد.`,
     }));
   }
   return out;
@@ -134,15 +134,15 @@ export const automation: Inference = (s) => {
 function arrivalFlavor(): { direct: string; source: string } {
   let host = '';
   try { host = document.referrer ? new URL(document.referrer).hostname : ''; } catch { host = ''; }
-  if (!host) return { direct: 'And you came straight here, no link, no search. You remembered the URL by heart. That is almost sweet.', source: '' };
+  if (!host) return { direct: 'و مستقیم آمدید اینجا؛ نه لینک، نه جستجو. URL را از حفظ بودید. تقریبا شیرین است.', source: '' };
   let name = host.replace(/^www\./, '');
   if (/news\.ycombinator/.test(host)) name = 'Hacker News';
   else if (/(twitter|x)\.com|t\.co/.test(host)) name = 'X';
   else if (/reddit/.test(host)) name = 'Reddit';
   else if (/linkedin/.test(host)) name = 'LinkedIn';
   else if (/github/.test(host)) name = 'GitHub';
-  else if (/google\./.test(host)) name = 'a Google search';
-  return { direct: '', source: `And you came back from ${name} again.` };
+  else if (/google\./.test(host)) name = 'جستجوی Google';
+  return { direct: '', source: `و باز هم از ${name} برگشتید.` };
 }
 
 /** The return-visit gotcha, the whole argument, made personal. */
@@ -156,10 +156,10 @@ export function returnVisit(visit: Visit): Claim[] {
   if (!visit.persisted) {
     return [claim({
       id: 'id.nostore',
-      text: `I tried to tag you so I'd know you next time. Your browser *threw it away*. Every store I reached for came back empty, so as far as I'm concerned you're a stranger every single visit. That's your setup working, and it's rarer than you'd think.`,
+      text: `تلاش کردم نشانه تان بزنم تا دفعه بعد بشناسمتان. مرورگر *انداختش دور*. هر ذخیره سازی که سراغش رفتم خالی بود؛ پس برای من هر بازدید غریبه اید. تنظیماتتان دارد کار میکند و از چیزی که فکر میکنید کمیاب تر است.`,
       confidence: 'certain', act: 9, weight: 9,
       evidence: [],
-      how: `We write a random tag to localStorage, IndexedDB, the Cache API and window.name, then read it straight back. Nothing survived, which means strict tracking protection, a private window, or clear-on-close. Note this cuts both ways: if your browser also randomises canvas and audio (Firefox's resistFingerprinting does), your fingerprint changes every visit too, which is exactly why it looks different each time.`,
+      how: `یک نشانه تصادفی در localStorage، IndexedDB، Cache API و window.name مینویسیم و بی درنگ میخوانیم. هیچ چیز نماند، یعنی محافظت ردیابی سخت گیرانه، پنجره خصوصی یا پاک کردن هنگام بستن. این دوطرفه است: اگر مرورگر canvas و صدا را هم تصادفی کند (resistFingerprinting در Firefox همین کار را میکند)، اثرانگشتتان در هر بازدید عوض میشود و برای همین هر بار متفاوت دیده میشود.`,
     })];
   }
 
@@ -168,35 +168,35 @@ export function returnVisit(visit: Visit): Claim[] {
     return [claim({
       id: 'id.return',
       text: arrival.direct
-        ? `First time here, and you typed the link in yourself, bold. Either way, I'll *remember you* now. That's rather the point.`
-        : `First time here? I'll *remember you* now, no cookie required. Come back and I'll prove it.`,
+        ? `اولین بارتان اینجاست و خودتان لینک را تایپ کردید، جسورید. در هر حال از حالا *یادتان میماند*. کل ماجرا همین است.`
+        : `بار اولتان است؟ از حالا *یادتان میماند*، بدون نیاز به کوکی. برگردید تا ثابت کنم.`,
       confidence: 'certain', act: 9, weight: 8,
       evidence: [],
-      how: `I just stored a random tag, not in a cookie, but across localStorage, IndexedDB, the Cache API and window.name at once. Clear your cookies, come back, and I'll still know you. That's the whole demonstration.`,
+      how: `همین الان یک نشانه تصادفی را نه در کوکی، بلکه همزمان در localStorage، IndexedDB، Cache API و window.name ذخیره کردم. کوکی ها را پاک کنید، برگردید و باز هم میشناسمتان. کل دمو همین است.`,
     })];
   }
 
   const daysAgo = Math.max(0, Math.round((Date.now() - visit.first) / 86400000));
-  const when = daysAgo === 0 ? 'earlier today' : daysAgo === 1 ? 'yesterday' : `${daysAgo} days ago`;
+  const when = daysAgo === 0 ? 'اوایل امروز' : daysAgo === 1 ? 'دیروز' : `${daysAgo} روز پیش`;
   const lede = visit.count >= 4
-    ? `You *really* like this website, don't you? This is visit number *${visit.count}*.`
-    : `I've seen you before, you first showed up *${when}*. This is visit number *${visit.count}*.`;
+    ? `واقعا این سایت را *خیلی* دوست دارید، نه؟ این بازدید شماره *${visit.count}* است.`
+    : `قبلا دیده بودمتان؛ اولین بار *${when}* پیدایتان شد. این بازدید شماره *${visit.count}* است.`;
 
   const out: Claim[] = [claim({
     id: 'id.return',
     text: `${lede} ${arrival.direct || arrival.source}`.trim(),
     confidence: 'certain', act: 9, weight: 8,
     evidence: [],
-    how: `On your first visit I stored a random tag, not in a cookie, but across localStorage, IndexedDB, the Cache API and window.name at once. I never learned your name; I just recognised the tag, and counted.`,
+    how: `در بازدید اول یک نشانه تصادفی را نه در کوکی، بلکه همزمان در localStorage، IndexedDB، Cache API و window.name ذخیره کردم. هرگز اسمتان را نفهمیدم؛ فقط نشانه را شناختم و شمردم.`,
   })];
 
   if (wiped > 0) {
     out.push(claim({
       id: 'id.evercookie',
-      text: `And you *cleared some of it*, ${wiped} of my hiding places were empty when you arrived. I restored them from the ones you missed. This is what tracking looks like without cookies.`,
+      text: `و *بخشی از آن را پاک کردید*؛ وقتی رسیدید ${wiped} تا از مخفیگاه ها خالی بود. از آن هایی که جا انداختید برگرداندمشان. ردیابی بدون کوکی همین شکلی است.`,
       confidence: 'certain', act: 9, weight: 10,
       evidence: [],
-      how: `You wiped ${visit.restored.join(', ')}, but ${visit.survivors.join(', ')} still held the tag. I copied it back into the empty ones. To actually forget you, every store has to be cleared at the same instant, which is why "clear cookies" was never enough. (There's a Forget Me button below. It genuinely works.)`,
+      how: `${visit.restored.join('، ')} را پاک کردید، اما ${visit.survivors.join('، ')} هنوز نشانه را داشتند. دوباره در جاهای خالی کپی اش کردم. برای فراموش کردنتان همه ذخیره سازی ها باید همان لحظه پاک شوند، برای همین «پاک کردن کوکی ها» هرگز کافی نبود. (پایین دکمه فراموشم کن هست؛ واقعا کار میکند.)`,
     }));
   }
   return out;
@@ -211,18 +211,18 @@ export function verdict(s: SignalMap): { claims: Claim[]; fingerprint: string; b
 
   const claims: Claim[] = [claim({
     id: 'id.entropy',
-    text: `Putting it together: roughly *1 in ${format(oneIn)}* browsers look like yours. None of this used a cookie.`,
+    text: `جمع بندی: تقریبا *۱ در ${format(oneIn)}* مرورگر شبیه مال شماست. هیچ کدام از این ها کوکی استفاده نکرد.`,
     confidence: 'likely', act: 10, weight: 9,
     evidence: ['gpu.renderer', 'canvas.hash', 'fonts.hash', 'audio.hash'],
-    how: `We summed the identifying information across every signal (${bits.toFixed(1)} bits of entropy) and turned it into a rarity. The exact number is an estimate; the point is that "anonymous" browsing isn't.`,
+    how: `اطلاعات شناسایی کننده همه سیگنال ها را جمع کردیم (${bits.toFixed(1)} بیت آنتروپی) و به کمیابی تبدیل کردیم. عدد دقیق تخمینی است؛ حرف این است که مرور ناشناس واقعا ناشناس نیست.`,
   })];
 
   return { claims, fingerprint, bits };
 }
 
 function format(n: number): string {
-  if (n >= 1e9) return `${(n / 1e9).toFixed(1)} billion`;
-  if (n >= 1e6) return `${(n / 1e6).toFixed(1)} million`;
+  if (n >= 1e9) return `${(n / 1e9).toFixed(1)} میلیارد`;
+  if (n >= 1e6) return `${(n / 1e6).toFixed(1)} میلیون`;
   if (n >= 1e3) return `${(n / 1e3).toFixed(0)},000`;
   return String(n);
 }

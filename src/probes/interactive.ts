@@ -177,20 +177,20 @@ class BehaviorCapture {
       : 0;
 
     return [
-      sig('bhv.pointer', 'Pointer device', p.type, { display: `${p.type} (${p.why})`, entropy: 1.5 }),
-      sig('bhv.pointerSure', 'Pointer classification confident', p.sure),
-      sig('bhv.dwellSec', 'Time on page (s)', Math.round((performance.now() - this.started) / 1000)),
-      sig('bhv.scrollDepth', 'Scroll depth', +r.depth.toFixed(2)),
-      sig('bhv.wpm', 'Reading speed (wpm)', r.wpm),
-      sig('bhv.skimmed', 'Skimmed rather than read', r.skimmed),
-      sig('bhv.pathEfficiency', 'Cursor path efficiency', +m.efficiency.toFixed(3)),
-      sig('bhv.human', 'Human-like motion', m.humanlike),
-      sig('bhv.clicks', 'Clicks', this.clicks),
-      sig('bhv.hesitationMs', 'Median hover-before-click (ms)', Math.round(medianHes)),
-      sig('bhv.keyboardNav', 'Keyboard navigations', this.keyboardNavCount),
-      sig('bhv.pointerNav', 'Pointer navigations', this.pointerNavCount),
-      sig('bhv.backspaces', 'Corrections (backspaces)', this.backspaces),
-      sig('bhv.tabAways', 'Times you looked away', this.tabAways),
+      sig('bhv.pointer', 'دستگاه اشاره گر', p.type, { display: `${p.type} (${p.why})`, entropy: 1.5 }),
+      sig('bhv.pointerSure', 'تشخیص اشاره گر مطمئن است', p.sure),
+      sig('bhv.dwellSec', 'زمان در صفحه (ثانیه)', Math.round((performance.now() - this.started) / 1000)),
+      sig('bhv.scrollDepth', 'عمق اسکرول', +r.depth.toFixed(2)),
+      sig('bhv.wpm', 'سرعت خواندن (کلمه در دقیقه)', r.wpm),
+      sig('bhv.skimmed', 'سطحی خواند نه دقیق', r.skimmed),
+      sig('bhv.pathEfficiency', 'بازده مسیر نشانگر', +m.efficiency.toFixed(3)),
+      sig('bhv.human', 'حرکت شبیه انسان', m.humanlike),
+      sig('bhv.clicks', 'کلیک ها', this.clicks),
+      sig('bhv.hesitationMs', 'میانه مکث قبل کلیک (میلی ثانیه)', Math.round(medianHes)),
+      sig('bhv.keyboardNav', 'جابجایی با کیبورد', this.keyboardNavCount),
+      sig('bhv.pointerNav', 'جابجایی با اشاره گر', this.pointerNavCount),
+      sig('bhv.backspaces', 'اصلاح ها (بک اسپیس)', this.backspaces),
+      sig('bhv.tabAways', 'تعداد دفعات نگاه به جای دیگر', this.tabAways),
       sig('bhv.keyboardOnly', 'Keyboard-only navigation',
         this.keyboardNavCount > 3 && this.pointerNavCount === 0),
     ];
@@ -217,7 +217,7 @@ class BehaviorCapture {
 export function analyzeTyping(events: KeyEvent[], target: string, typed: string): Signal[] {
   const chars = events.filter((e) => e.key.length === 1);
   if (chars.length < 8) {
-    return [sig('key.tooShort', 'Typing sample', true, { error: 'not enough keystrokes' })];
+    return [sig('key.tooShort', 'نمونه تایپ', true, { error: 'تعداد کلیدها کافی نیست' })];
   }
   // Dwell = key held; flight = gap between consecutive key presses.
   const dwell = chars.map((e) => e.up - e.down);
@@ -233,7 +233,7 @@ export function analyzeTyping(events: KeyEvent[], target: string, typed: string)
   // Nobody types faster than ~220 wpm. Sub-20ms gaps between keys mean it wasn't
   // typed at all, a paste, or an autofill. Call it out instead of printing junk.
   if (meanFlight < 20 || wpm > 220) {
-    return [sig('key.pasted', 'Typing sample', true, { display: 'not typed, pasted or autofilled' })];
+    return [sig('key.pasted', 'نمونه تایپ', true, { display: 'تایپ نشده، پیست یا خودکار پر شده' })];
   }
   // Rhythm consistency: low variance = steady, practiced typist.
   const flightCv = stdev(flight) / (meanFlight || 1);

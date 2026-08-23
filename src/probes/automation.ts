@@ -25,7 +25,7 @@ interface Check { hit: boolean; weight: number; reason: string; }
  * automation tells. No single check is conclusive; the combined score is. */
 export const automationProbe: Probe = {
   id: 'bot',
-  title: 'Automation',
+  title: 'خودکار بودن',
   tier: 0,
   async run() {
     const n = navigator;
@@ -82,10 +82,10 @@ export const automationProbe: Probe = {
     const vmRenderer = renderer ? /VMware|VirtualBox|Parallels|QEMU|virgl/i.test(renderer) : false;
 
     return [
-      sig('bot.score', 'Automation score', normalized, { display: normalized.toFixed(2) }),
-      sig('bot.headless', 'Likely headless/automated', headless),
-      sig('bot.reasons', 'Reasons', reasons, { display: reasons.join('; ') || 'none' }),
-      sig('bot.vm', 'Virtual machine detected', vmRenderer, { display: renderer ?? 'unknown' }),
+      sig('bot.score', 'امتیاز خودکار بودن', normalized, { display: normalized.toFixed(2) }),
+      sig('bot.headless', 'احتمالا بدون رابط یا خودکار', headless),
+      sig('bot.reasons', 'دلیل ها', reasons, { display: reasons.join('; ') || 'هیچ' }),
+      sig('bot.vm', 'ماشین مجازی پیدا شد', vmRenderer, { display: renderer ?? 'نامشخص' }),
     ];
   },
 };

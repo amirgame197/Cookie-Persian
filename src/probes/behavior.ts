@@ -58,7 +58,7 @@ export const behaviorState = new BehaviorState();
 
 export const behaviorProbe: Probe = {
   id: 'behavior',
-  title: 'Behaviour',
+  title: 'رفتار',
   tier: 0,
   async run() {
     behaviorState.attach();

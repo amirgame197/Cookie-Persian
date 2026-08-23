@@ -43,7 +43,7 @@ function osFamilyOf(s: SignalMap): { key: string; label: string } {
   if (/Linux|X11/.test(ua)) return { key: 'linux', label: 'Linux' };
   const f = s['fonts.impliedOS']?.value as string | undefined;
   if (f && f !== 'unknown') return { key: f === 'macos' ? 'apple' : f, label: f };
-  return { key: 'other', label: 'an unusual OS' };
+  return { key: 'other', label: 'یک سیستم عامل غیر معمول' };
 }
 
 function browserOf(ua: string): { key: string; label: string } {
@@ -53,24 +53,24 @@ function browserOf(ua: string): { key: string; label: string } {
   if (/Firefox\//.test(ua)) return { key: 'firefox', label: 'Firefox' };
   if (/Chrome\//.test(ua)) return { key: 'chrome', label: 'Chrome' };
   if (/Safari\//.test(ua)) return { key: 'safari', label: 'Safari' };
-  return { key: 'other', label: 'an unusual browser' };
+  return { key: 'other', label: 'یک مرورگر غیر معمول' };
 }
 
 const LANG_NAME: Record<string, string> = {
-  en: 'English', zh: 'Chinese', es: 'Spanish', pt: 'Portuguese', fr: 'French',
-  de: 'German', ja: 'Japanese', ru: 'Russian', ar: 'Arabic', hi: 'Hindi',
-  ko: 'Korean', it: 'Italian', nl: 'Dutch', tr: 'Turkish', pl: 'Polish',
+  en: 'انگلیسی', zh: 'چینی', es: 'اسپانیایی', pt: 'پرتغالی', fr: 'فرانسوی',
+  de: 'آلمانی', ja: 'ژاپنی', ru: 'روسی', ar: 'عربی', hi: 'هندی',
+  ko: 'کره ای', it: 'ایتالیایی', nl: 'هلندی', tr: 'ترکی', pl: 'لهستانی',
 };
 
 export function rarityFunnel(s: SignalMap): { rows: RarityRow[]; oneIn: number } {
   const rows: Array<{ label: string; value: string; pct: number }> = [];
 
   const os = osFamilyOf(s);
-  rows.push({ label: 'Operating system', value: os.label, pct: OS_PREV[os.key] ?? 0.02 });
+  rows.push({ label: 'سیستم عامل', value: os.label, pct: OS_PREV[os.key] ?? 0.02 });
 
   const ua = (s['platform.ua']?.value as string) || '';
   const br = browserOf(ua);
-  rows.push({ label: 'Browser', value: br.label, pct: BROWSER_PREV[br.key] ?? 0.02 });
+  rows.push({ label: 'مرورگر', value: br.label, pct: BROWSER_PREV[br.key] ?? 0.02 });
 
   // Prefer the Accept-Language header: it carries the content languages you
   // actually configured. navigator.languages often reports the browser's UI
@@ -81,19 +81,19 @@ export function rarityFunnel(s: SignalMap): { rows: RarityRow[]; oneIn: number }
     ?? (s['platform.languages']?.value as string[] | undefined)?.[0]
     ?? (s['env.locale']?.value as string | undefined) ?? 'en';
   const langBase = langFull.split('-')[0].toLowerCase();
-  rows.push({ label: 'Primary language', value: LANG_NAME[langBase] ?? langFull, pct: LANG_PREV[langBase] ?? 0.01 });
+  rows.push({ label: 'زبان اصلی', value: LANG_NAME[langBase] ?? langFull, pct: LANG_PREV[langBase] ?? 0.01 });
 
   const tz = s['env.timezone']?.value as string | undefined;
-  if (tz) rows.push({ label: 'Timezone', value: tz, pct: TZ_PREV[tz] ?? 0.008 });
+  if (tz) rows.push({ label: 'منطقه زمانی', value: tz, pct: TZ_PREV[tz] ?? 0.008 });
 
   const res = s['display.resolution']?.value as [number, number] | undefined;
   if (res) {
     const key = `${res[0]}x${res[1]}`;
-    rows.push({ label: 'Screen resolution', value: `${res[0]} × ${res[1]}`, pct: RES_PREV[key] ?? 0.01 });
+    rows.push({ label: 'وضوح صفحه', value: `${res[0]} × ${res[1]}`, pct: RES_PREV[key] ?? 0.01 });
   }
 
   const dntOn = s['platform.dnt']?.value === '1' || s['platform.dnt']?.value === true || s['platform.gpc']?.value === true;
-  rows.push({ label: 'Do Not Track', value: dntOn ? 'on (rare)' : 'off', pct: dntOn ? 0.1 : 0.9 });
+  rows.push({ label: 'ردیابی نشوید', value: dntOn ? 'روشن (کمیاب)' : 'خاموش', pct: dntOn ? 0.1 : 0.9 });
 
   // Compound into a running 1-in-N.
   let product = 1;

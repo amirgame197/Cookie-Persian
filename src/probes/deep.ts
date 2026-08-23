@@ -9,7 +9,7 @@ const sig = (id: string, label: string, value: unknown, extra: Partial<Signal> =
  *  whose sign bit is set by the CPU's FPU, and x86 vs ARM disagree on the default. */
 export const cpuArchProbe: Probe = {
   id: 'cpuArch',
-  title: 'CPU architecture',
+  title: 'معماری CPU',
   tier: 0,
   async run() {
     try {
@@ -24,13 +24,13 @@ export const cpuArchProbe: Probe = {
       const archGuess = signByte === 255 ? 'x86-family' : signByte === 127 ? 'ARM-family' : 'unknown';
 
       return [
-        sig('deep.nanArch', 'NaN sign byte', signByte, { entropy: 1 }),
-        sig('deep.archGuess', 'CPU architecture guess', archGuess, {
+        sig('deep.nanArch', 'بایت علامت NaN', signByte, { entropy: 1 }),
+        sig('deep.archGuess', 'حدس معماری CPU', archGuess, {
           display: archGuess, entropy: 1,
         }),
       ];
     } catch (err) {
-      return [sig('deep.nanArch', 'NaN sign byte', null, {
+      return [sig('deep.nanArch', 'بایت علامت NaN', null, {
         error: err instanceof Error ? err.message : String(err),
       })];
     }
@@ -41,7 +41,7 @@ export const cpuArchProbe: Probe = {
  *  expose last-bit differences between JS engines and CPU libm implementations. */
 export const mathProbe: Probe = {
   id: 'math',
-  title: 'Math fingerprint',
+  title: 'اثرانگشت ریاضی',
   tier: 0,
   async run() {
     try {
@@ -70,11 +70,11 @@ export const mathProbe: Probe = {
       const mathSample = sampleKeys.map((k) => `${k}=${results[k]}`).join(', ');
 
       return [
-        sig('deep.mathHash', 'Math fingerprint hash', mathHash, { entropy: 3 }),
-        sig('deep.mathSample', 'Math sample values', results, { display: mathSample }),
+        sig('deep.mathHash', 'هش اثرانگشت ریاضی', mathHash, { entropy: 3 }),
+        sig('deep.mathSample', 'مقدارهای نمونه ریاضی', results, { display: mathSample }),
       ];
     } catch (err) {
-      return [sig('deep.mathHash', 'Math fingerprint hash', null, {
+      return [sig('deep.mathHash', 'هش اثرانگشت ریاضی', null, {
         error: err instanceof Error ? err.message : String(err),
       })];
     }
@@ -86,7 +86,7 @@ export const mathProbe: Probe = {
  *  vendor-only globals unmask the true embedding browser behind a shared engine. */
 export const applePayProbe: Probe = {
   id: 'applePay',
-  title: 'Payment & vendor capabilities',
+  title: 'توانایی های پرداخت و سازنده',
   tier: 1,
   async run() {
     const out: Signal[] = [];
@@ -112,9 +112,9 @@ export const applePayProbe: Probe = {
     // <a> elements in WebKit builds shipping Apple's ad-attribution API.
     try {
       const a = document.createElement('a') as unknown as { attributionSourceId?: unknown };
-      out.push(sig('deep.privateClickMeasurement', 'Private Click Measurement', a.attributionSourceId !== undefined));
+      out.push(sig('deep.privateClickMeasurement', 'اندازه گیری خصوصی کلیک', a.attributionSourceId !== undefined));
     } catch (err) {
-      out.push(sig('deep.privateClickMeasurement', 'Private Click Measurement', null, {
+      out.push(sig('deep.privateClickMeasurement', 'اندازه گیری خصوصی کلیک', null, {
         error: err instanceof Error ? err.message : String(err),
       }));
     }
@@ -133,10 +133,10 @@ export const applePayProbe: Probe = {
         ['uc-browser', w.UCShellJava],
       ];
       const matched = vendorChecks.find(([, v]) => v !== undefined);
-      out.push(sig('deep.vendorFlavor', 'Vendor flavor', matched ? matched[0] : 'standard', { entropy: 1.5 }));
-      out.push(sig('deep.uaFlavor', 'UA hint style', n.userAgentData ? 'ua-ch' : 'legacy-ua'));
+      out.push(sig('deep.vendorFlavor', 'نوع سازنده', matched ? matched[0] : 'standard', { entropy: 1.5 }));
+      out.push(sig('deep.uaFlavor', 'نوع راهنمای UA', n.userAgentData ? 'ua-ch' : 'legacy-ua'));
     } catch (err) {
-      out.push(sig('deep.vendorFlavor', 'Vendor flavor', null, {
+      out.push(sig('deep.vendorFlavor', 'نوع سازنده', null, {
         error: err instanceof Error ? err.message : String(err),
       }));
     }
@@ -150,7 +150,7 @@ export const applePayProbe: Probe = {
  *  and almost no anti-fingerprinting tool intercepts the MathML layout path. */
 export const mathmlProbe: Probe = {
   id: 'mathml',
-  title: 'MathML rendering',
+  title: 'رندر MathML',
   tier: 1,
   async run() {
     let container: HTMLDivElement | null = null;
@@ -189,13 +189,13 @@ export const mathmlProbe: Probe = {
       const mathmlHash = hash(JSON.stringify(geometry));
 
       return [
-        sig('deep.mathmlHash', 'MathML rendering hash', mathmlHash, {
+        sig('deep.mathmlHash', 'هش رندر MathML', mathmlHash, {
           display: rects.map((r) => `${r.w.toFixed(2)}x${r.h.toFixed(2)}`).join(', '),
           entropy: 3,
         }),
       ];
     } catch (err) {
-      return [sig('deep.mathmlHash', 'MathML rendering hash', null, {
+      return [sig('deep.mathmlHash', 'هش رندر MathML', null, {
         error: err instanceof Error ? err.message : String(err),
       })];
     } finally {

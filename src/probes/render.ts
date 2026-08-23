@@ -61,7 +61,7 @@ export const gpuProbe: Probe = {
     const gl = (canvas.getContext('webgl2') || canvas.getContext('webgl')) as GLish | null;
 
     if (!gl) {
-      out.push(sig('gpu.vendor', 'GPU vendor', null, { error: 'WebGL unavailable' }));
+      out.push(sig('gpu.vendor', 'سازنده GPU', null, { error: 'WebGL در دسترس نیست' }));
       return out;
     }
 
@@ -70,8 +70,8 @@ export const gpuProbe: Probe = {
     const renderer = dbg ? gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER);
 
     out.push(
-      sig('gpu.vendor', 'GPU vendor', vendor ?? null),
-      sig('gpu.renderer', 'GPU renderer', renderer ?? null, { entropy: 7 }),
+      sig('gpu.vendor', 'سازنده GPU', vendor ?? null),
+      sig('gpu.renderer', 'رندر کننده GPU', renderer ?? null, { entropy: 7 }),
     );
 
     const params: Record<string, unknown> = {};
@@ -83,17 +83,17 @@ export const gpuProbe: Probe = {
       params.SHADING_LANGUAGE_VERSION = gl.getParameter(gl.SHADING_LANGUAGE_VERSION);
       params.VERSION = gl.getParameter(gl.VERSION);
     } catch { /* some param unsupported on this driver */ }
-    out.push(sig('gpu.params', 'WebGL parameters', params));
+    out.push(sig('gpu.params', 'پارامترهای WebGL', params));
 
     const extensions = gl.getSupportedExtensions() ?? [];
     out.push(sig('gpu.extensions', 'WebGL extensions', extensions, {
-      display: `${extensions.length} extensions`,
+      display: `${extensions.length} افزونه`,
     }));
 
     const workerRenderer = await readRendererInWorker();
-    out.push(sig('gpu.workerRenderer', 'GPU renderer (worker)', workerRenderer));
+    out.push(sig('gpu.workerRenderer', 'رندر کننده GPU (ورکر)', workerRenderer));
     if (workerRenderer != null) {
-      out.push(sig('gpu.rendererMismatch', 'Renderer mismatch (main vs worker)', workerRenderer !== renderer));
+      out.push(sig('gpu.rendererMismatch', 'فرق رندر کننده (اصلی و ورکر)', workerRenderer !== renderer));
     }
 
     // WebGPU is a second, independently-implemented path to the same vendor info,
@@ -245,7 +245,7 @@ export const audioProbe: Probe = {
  * a Range, hashed together, font metrics and rasteriser rounding leak here. */
 export const domRectProbe: Probe = {
   id: 'domrect',
-  title: 'DOM geometry',
+  title: 'هندسه DOM',
   tier: 1,
   async run() {
     const out: Signal[] = [];

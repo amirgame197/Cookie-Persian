@@ -18,10 +18,10 @@ export const trackingHypocrisy: Inference = (s) => {
   const which = gpc && dnt === '1' ? 'Do Not Track and Global Privacy Control' : gpc ? 'Global Privacy Control' : 'Do Not Track';
   return [claim({
     id: 'ses.dnt',
-    text: `You've switched on *${which}*, you're actively asking sites not to track you. We saw the request. We ignored it. So does nearly everyone.`,
+    text: `*${which}* را روشن کرده اید و از سایت ها میخواهید ردیابی تان نکنند. درخواست را دیدیم. نادیده گرفتیم. تقریبا همه همین کار را میکنند.`,
     confidence: 'certain', act: 4, weight: 5,
     evidence: ['platform.dnt', 'platform.gpc'],
-    how: `Your browser sends a header on every request asking not to be tracked. It's honoured by almost no one because it was never legally binding (GPC has some force under California law; DNT has essentially none). The signal arrives; the site decides whether to care. Most don't.`,
+    how: `مرورگر شما در هر درخواست یک هدر میفرستد که میخواهد ردیابی نشوید. تقریبا هیچ کس رعایتش نمیکند چون هرگز الزام قانونی نداشت (GPC در قانون کالیفرنیا کمی قدرت دارد؛ DNT عملا هیچ). سیگنال میرسد، سایت انتخاب میکند اهمیت بدهد یا نه. بیشترشان نمیدهند.`,
   })];
 };
 
@@ -39,11 +39,11 @@ export const batteryState: Inference = (s) => {
   return [claim({
     id: 'ses.battery',
     text: charging === false
-      ? `Your battery is at *${pct}%* and you're *not plugged in* right now.`
-      : `Your battery is at *${pct}%*.`,
+      ? `باتری شما *${pct}%* است و همین الان *به برق وصل نیست*.`
+      : `باتری شما *${pct}%* است.`,
     confidence: 'certain', act: 3, weight: 3,
     evidence: ['hw.batteryLevel', 'hw.charging'],
-    how: `The Battery Status API hands your exact charge level and whether you're plugged in to any site, no permission. Firefox and Safari removed it specifically because it's this good a fingerprint; Chrome still ships it.`,
+    how: `API وضعیت باتری، میزان دقیق شارژ و اینکه به برق وصلید یا نه را بدون دسترسی به هر سایتی میدهد. Firefox و Safari دقیقا چون اثرانگشت خوبی بود حذفش کردند؛ Chrome هنوز داردش.`,
   })];
 };
 
@@ -55,10 +55,10 @@ export const batteryState: Inference = (s) => {
 export const loginDetectionDead: Inference = () => {
   return [{
     id: 'ses.logindead',
-    text: `Ten years ago I could have listed every site you're logged into right now, Gmail, GitHub, your bank. Browsers finally *killed that trick* around 2020. It's the one thing on this page that actually got better.`,
+    text: `ده سال پیش میتوانستم همه سایت هایی را که همین الان واردشانید فهرست کنم؛ Gmail، GitHub، بانک. مرورگرها حدود ۲۰۲۰ بالاخره *این ترفند را کشتند*. تنها چیز این صفحه که واقعا بهتر شد.`,
     confidence: 'certain', act: 4, weight: 2,
     evidence: [],
-    how: `The attack loaded a login-only image from each site and watched whether it loaded. It worked because your session cookie rode along on that cross-site request. Then browsers made cookies "SameSite=Lax" by default, so they no longer do, and the endpoints that leaked got locked down. We checked in 2026: it's dead across the board. Enjoy this rare win.`,
+    how: `حمله از هر سایت یک تصویر مخصوص کاربران واردشده بارگذاری میکرد و میدید باز میشود یا نه. جواب میداد چون کوکی نشست شما با درخواست بین سایتی میرفت. بعد مرورگرها SameSite=Lax را پیش فرض کردند، پس دیگر نمیرود و مسیرهای نشت هم بسته شدند. در ۲۰۲۶ بررسی کردیم: همه جا مرده است. از این برد نادر لذت ببرید.`,
   }];
 };
 
@@ -69,18 +69,18 @@ export const sessionMeta: Inference = (s) => {
   if (s['incognito.private']?.value === true) {
     out.push(claim({
       id: 'ses.incognito',
-      text: `You're *probably in a private window*. You thought that would change what we can see. It changed *nothing*. Cute.`,
+    text: `*احتمالا در پنجره خصوصی* هستید. فکر کردید چیزی که میبینیم عوض میشود. *هیچ چیز* عوض نشد. بامزه است.`,
       confidence: 'guess', act: 6, weight: 7,
       evidence: ['incognito.private', 'incognito.method'],
-      how: `Private mode only stops your own browser writing history and cookies to disk. It doesn't touch your IP, your GPU, your fonts, your screen, or a single thing on this page, all of which worked exactly the same. Safari private windows switch off the Origin Private File System, and yours is off, which is the tell. We say "probably" because a genuinely full disk raises the same error.`,
+      how: `حالت خصوصی فقط جلوی نوشتن تاریخچه و کوکی مرورگر خودتان روی دیسک را میگیرد. به آیپی، GPU، فونت، صفحه یا هیچ چیز این صفحه دست نمیزند و همه همان طور کار کردند. پنجره خصوصی Safari، Origin Private File System را خاموش میکند و مال شما خاموش است. چون دیسک واقعا پر هم همین خطا را میدهد، میگوییم «احتمالا».`,
     }));
   } else if (s['incognito.attempted']?.value === false) {
     out.push(claim({
       id: 'ses.incognitoUnknown',
-      text: `A private window wouldn't have changed *any* of this, incidentally. Every reading above works exactly the same in one.`,
+    text: `راستی پنجره خصوصی *هیچ کدام* از این ها را عوض نمیکرد. همه چیز بالا در آن هم دقیقا همین طور کار میکند.`,
       confidence: 'certain', act: 6, weight: 2,
       evidence: ['incognito.attempted'],
-      how: `Private mode only stops your own browser writing history and cookies to disk. It doesn't touch your IP, GPU, fonts, screen or timezone. We're not claiming you're in one, on your browser we deliberately don't guess: Chrome closed the storage-quota gap that used to give it away, and the timing benchmark that replaced it misfires on ordinary machines with fast storage, while Firefox's remaining tell can't be told apart from strict tracking protection in a normal window.`,
+      how: `حالت خصوصی فقط جلوی نوشتن تاریخچه و کوکی روی دیسک را میگیرد و به آیپی، GPU، فونت، صفحه یا منطقه زمانی دست نمیزند. نمیگوییم حتما در آن هستید؛ در مرورگر شما عمدا حدس نمیزنیم: Chrome شکاف سهم ذخیره سازی را بست و تست زمان جایگزین روی دستگاه های عادی با حافظه سریع اشتباه میکند، ضمن اینکه نشانه باقی مانده Firefox از محافظت ردیابی سخت گیرانه در پنجره عادی قابل تشخیص نیست.`,
     }));
   }
 

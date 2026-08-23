@@ -17,18 +17,18 @@
  */
 export const APPLE_MODELS: Record<string, string> = {
   // --- Macs (native panel resolution; only matches at native/default 2× scaling) ---
-  '2560x1664@2': 'a MacBook Air (13-inch, M-series)',
-  '2880x1864@2': 'a MacBook Air (15-inch, M-series)',
-  '2560x1600@2': 'a 13-inch MacBook Pro or Air',
-  '3024x1964@2': 'a MacBook Pro (14-inch)',
-  '3456x2234@2': 'a MacBook Pro (16-inch)',
-  '4480x2520@2': 'an iMac (24-inch, M-series)',
-  '5120x2880@2': 'a 27-inch 5K display (iMac or Studio Display)',
+  '2560x1664@2': 'یک مک بوک ایر (13-اینچ، مدلM)',
+  '2880x1864@2': 'یک مک بوک ایر (15-اینچ، مدلM)',
+  '2560x1600@2': 'یک مک بوک ایر (13-اینچ، مدلM)',
+  '3024x1964@2': 'یک مک بوک پرو (14-اینچ)',
+  '3456x2234@2': 'یک مک بوک پرو (16-اینچ)',
+  '4480x2520@2': 'یک آی مک (24-اینچ، مدلM)',
+  '5120x2880@2': 'یک نمایشگر 27-اینچ 5K (آی مک یا Studio Display)',
 
   // --- iPads (render resolution = CSS points × dpr) ---
-  '1640x2360@2': 'an iPad (10th gen) or iPad Air',
-  '1668x2388@2': 'an iPad Pro (11-inch)',
-  '2048x2732@2': 'an iPad Pro (12.9-inch)',
+  '1640x2360@2': 'یک آیپد (10 نسل) or آیپد ایر',
+  '1668x2388@2': 'یک آیپد پرو (11-اینچ)',
+  '2048x2732@2': 'یک آیپد پرو (12.9-اینچ)',
 };
 
 /** Resolve a model from logical screen pixels + devicePixelRatio, trying both

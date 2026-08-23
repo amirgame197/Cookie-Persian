@@ -35,7 +35,7 @@ const SAFARI = () => {
 
 export const incognitoProbe: Probe = {
   id: 'incognito',
-  title: 'Private browsing',
+  title: 'مرور خصوصی',
   tier: 0,
   async run() {
     const out: Signal[] = [];
@@ -74,12 +74,12 @@ export const incognitoProbe: Probe = {
 
     out.push(
       sig('incognito.private', 'Likely private browsing', isPrivate, {
-        display: isPrivate ? `likely (${method})` : attempted ? 'no signal' : 'not testable on this browser',
+        display: isPrivate ? `احتمالا (${method})` : attempted ? 'سیگنالی نیست' : 'در این مرورگر قابل بررسی نیست',
       }),
       sig('incognito.method', 'Detection method', method),
       sig('incognito.attempted', 'Detection attempted', attempted),
       sig('incognito.quota', 'Storage quota (bytes)', quota, {
-        display: quota != null ? `${Math.round(quota / (1024 * 1024))} MB` : 'unknown',
+        display: quota != null ? `${Math.round(quota / (1024 * 1024))} مگابایت` : 'نامشخص',
         entropy: 2,
       }),
     );

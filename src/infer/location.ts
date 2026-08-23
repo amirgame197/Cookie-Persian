@@ -21,11 +21,11 @@ export const geolocation: Inference = (s) => {
   if (place) {
     out.push(claim({
       id: 'loc.city',
-      text: `You're in or near *${place}*${country && place !== country ? `, ${country}` : ''}.`,
+      text: `شما در *${place}*${country && place !== country ? `، ${country}` : ''} یا اطرافش هستید.`,
       confidence: city ? 'likely' : 'guess',
       act: 1, weight: 7,
       evidence: ['edge.city', 'edge.region', 'edge.country', 'edge.ip'],
-      how: `Your IP address resolves to this location. This is known at the network layer, before the page renders, before any cookie. Every site you visit sees your IP and can look this up instantly.`,
+      how: `آیپی شما به این مکان میرسد. این موضوع در لایه شبکه، قبل از رندر صفحه و قبل از هر کوکی معلوم است. هر سایتی که میبینید آیپی شما را دارد و فوری میتواند پیدایش کند.`,
     }));
   }
 
@@ -34,11 +34,11 @@ export const geolocation: Inference = (s) => {
     out.push(claim({
       id: 'loc.isp',
       text: isCorporate(org)
-        ? `You're on *${isp}*'s network, this looks like a corporate or institutional connection.`
-        : `Your internet provider is *${isp}*.`,
+        ? `روی شبکه *${isp}* هستید؛ شبیه یک اتصال شرکتی یا سازمانی است.`
+        : `ارائه دهنده اینترنت شما *${isp}* است.`,
       confidence: 'likely', act: 1, weight: 5,
       evidence: ['edge.asOrg', 'edge.asn'],
-      how: `Every IP belongs to an Autonomous System registered to an organisation. Yours is "${org}". On a company or university network, that's often the employer's name.`,
+      how: `هر آیپی به یک Autonomous System ثبت شده برای یک سازمان تعلق دارد. مال شما «${org}» است. در شبکه شرکت یا دانشگاه معمولا نام کارفرماست.`,
     }));
   }
 
@@ -77,10 +77,10 @@ export const vpnContradiction: Inference = (s) => {
     const realCity = browserTz.split('/').pop()?.replace(/_/g, ' ');
     out.push(claim({
       id: 'loc.vpn',
-      text: `Your IP puts you in *${ipCity}* (${fmtOffset(ipOff!)}). Your computer's clock is set to *${realCity}* (${fmtOffset(browserOff!)}). One of those is a VPN, and your clock is the one telling the truth.`,
+      text: `آیپی شما را در *${ipCity}* (${fmtOffset(ipOff!)}) میگذارد. ساعت کامپیوتر روی *${realCity}* (${fmtOffset(browserOff!)}) است. یکی از این ها VPN است و ساعتتان راست میگوید.`,
       confidence: 'likely', act: 4, weight: 9,
       evidence: ['edge.timezone', 'env.timezone', 'edge.city'],
-      how: `The network sees your VPN exit (${ipTz}, ${fmtOffset(ipOff!)}). But your operating system's own timezone (${browserTz}, ${fmtOffset(browserOff!)}) travelled with you through the tunnel, the VPN can't rewrite it. The offsets genuinely differ, so you're tunnelling, and the OS timezone points at where you actually are.`,
+      how: `شبکه خروجی VPN شما را میبیند (${ipTz}، ${fmtOffset(ipOff!)}). اما منطقه زمانی خود سیستم عامل (${browserTz}، ${fmtOffset(browserOff!)}) با شما از تونل رد شده و VPN نمیتواند عوضش کند. اختلاف واقعی است، پس تونل زده اید و منطقه زمانی سیستم عامل جایی که واقعا هستید را نشان میدهد.`,
     }));
   }
 
@@ -94,11 +94,11 @@ export const vpnContradiction: Inference = (s) => {
     out.push(claim({
       id: 'loc.langMismatch',
       text: tzMismatch
-        ? `Your browser speaks *${langName}*, your IP is in *${country}*, and your clock is in a third place. That's not a traveller. That's a *VPN*.`
-        : `Your browser speaks *${langName}*, but your IP is in *${country}*, where that isn't the local language. So you're one of three things: *multilingual, travelling, or on a VPN*, and we can tell it's one of them.`,
+        ? `مرورگر شما *${langName}* حرف میزند، آیپی در *${country}* است و ساعت در جای سوم. این مسافر نیست؛ *VPN* است.`
+        : `مرورگر شما *${langName}* حرف میزند، اما آیپی در *${country}* است که آن زبان محلی نیست. پس یکی از این سه حالتید: *چند زبانه، در سفر، یا روی VPN*؛ و میفهمیم یکی از آن هاست.`,
       confidence: tzMismatch ? 'likely' : 'guess', act: 4, weight: tzMismatch ? 7 : 5,
       evidence: ['platform.languages', 'edge.country', 'edge.timezone', 'env.timezone'],
-      how: `Your configured language (${langs.join(', ')}) doesn't match the country your IP resolves to (${country}). On its own that's a soft signal; combined with a timezone that also disagrees, it's a near-certain VPN. Every site sees both of these on arrival and can draw the same conclusion.`,
+      how: `زبان تنظیم شده شما (${langs.join('، ')}) با کشوری که آیپی به آن میرسد (${country}) جور نیست. به تنهایی نشانه ضعیفی است؛ با منطقه زمانی متفاوت، تقریبا حتمی است که VPN دارید. هر سایت در همان ورود هر دو را میبیند و همین نتیجه را میگیرد.`,
     }));
   }
 
@@ -131,19 +131,19 @@ export const localTimeBeat: Inference = (s) => {
   if (hour >= 0 && hour <= 4) {
     return [claim({
       id: 'loc.time',
-      text: `It's *${clock}* where you are. You should be asleep. We won't tell anyone, but your device just did.`,
+      text: `آنجا که هستید ساعت *${clock}* است. باید خواب باشید. به کسی نمیگوییم، ولی دستگاهتان همین الان گفت.`,
       confidence: 'certain', act: 1, weight: 6,
       evidence: ['env.localTime', 'env.hour'],
-      how: `Your clock is set locally and your browser reports it freely. Right now it reads ${clock}. Time-of-day is one of the quietest things a site learns about you, and one of the most telling.`,
+      how: `ساعت شما محلی تنظیم شده و مرورگر آزادانه گزارشش میکند. الان ${clock} است. ساعت روز یکی از بی سر و صداترین چیزهایی است که سایت از شما میفهمد، و یکی از گویاترین ها.`,
     })];
   }
   if (hour === 5 || hour === 6) {
     return [claim({
       id: 'loc.time',
-      text: `It's *${clock}* where you are, either you're up early, or you never went to bed.`,
+      text: `آنجا که هستید ساعت *${clock}* است؛ یا زود بیدارید یا اصلا نخوابیده اید.`,
       confidence: 'certain', act: 1, weight: 5,
       evidence: ['env.localTime', 'env.hour'],
-      how: `Your browser reports your exact local time (${clock}). We didn't ask; it just tells any page that loads.`,
+      how: `مرورگر زمان محلی دقیق شما (${clock}) را گزارش میکند. نپرسیدیم؛ خودش به هر صفحه ای که بارگیری شود میگوید.`,
     })];
   }
   return [];
@@ -158,10 +158,10 @@ export const coloTriangulation: Inference = (s) => {
   const rttStr = typeof rtt === 'number' ? `, about *${rtt} ms* away` : '';
   return [claim({
     id: 'loc.colo',
-    text: `At the network level, you reached us through *${city}*${rttStr}. That's a location fix your IP can't fake, it's measured, not claimed.`,
+    text: `در سطح شبکه از *${city}*${rttStr} به ما رسیدید. این موقعیتی است که آیپی نمیتواند جعلش کند؛ اندازه گیری شده، نه ادعا شده.`,
     confidence: 'likely', act: 1, weight: 4,
     evidence: ['edge.colo', 'edge.tcpRtt'],
-    how: `You connected through the ${colo} datacenter, and the round-trip time bounds how far you physically are from it. A VPN can move your apparent IP, but it can't make packets travel faster than light, so this corroborates (or contradicts) where you say you are.`,
+    how: `از دیتاسنتر ${colo} وصل شدید و زمان رفت و برگشت حدود فاصله فیزیکی شما تا آن را مشخص میکند. VPN میتواند آیپی ظاهری را جابه جا کند، اما نمیتواند بسته ها را سریع تر از نور ببرد؛ پس این موقعیتتان را تایید یا رد میکند.`,
   })];
 };
 
@@ -192,10 +192,10 @@ export const handshake: Inference = (s) => {
   const bits = [tls, proto].filter(Boolean).join(' over ');
   return [claim({
     id: 'loc.handshake',
-    text: `We fingerprinted your connection *during the handshake*, ${bits}${cipher ? `, ${cipher}` : ''}, before your browser had run a single line of our code.`,
+    text: `اتصال شما را *هنگام handshake* اثرانگشت گرفتیم، ${bits}${cipher ? `، ${cipher}` : ''}، پیش از اینکه مرورگر یک خط از کد ما را اجرا کند.`,
     confidence: 'certain', act: 1, weight: 6,
     evidence: ['edge.tlsVersion', 'edge.tlsCipher', 'edge.httpProtocol', 'edge.tlsHelloLength'],
-    how: `The TLS negotiation that secures this page also identifies your browser: the cipher list, the protocol version, the ClientHello size. That happens at the very start of the connection. By the time you "arrived," you were already described.`,
+    how: `مذاکره TLS که این صفحه را امن میکند، مرورگر شما را هم معرفی میکند: فهرست cipherها، نسخه پروتکل و اندازه ClientHello. این در همان ابتدای اتصال رخ میدهد. تا وقتی «رسیدید»، از قبل توصیف شده بودید.`,
   })];
 };
 
