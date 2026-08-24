@@ -210,7 +210,8 @@ function renderFinale(dossier: Dossier, signals: SignalMap, fingerprint: string,
       و البته این نسخه دست و پا چلفتی و بدون کوکی است: سایتی که کوکی تنظیم میکند میتواند حدس های اشتباه را به مرور زمان اصلاح کند، 
       و هر جایی که وارد سیستم میشوید یا پرداخت می‌کنید، هرگز مجبور به حدس زدن نیست.
       <br><br>ترجمه شده توسط <a href="https://github.com/amirgame197" target="_blank" rel="noopener">amir</a> (<a href="https://github.com/amirgame197/Cookie-Persian" target="_blank" rel="noopener">مشاهده پروژه</a>)
-      <br>مشاهده <a href="https://github.com/Kuberwastaken/cookie" target="_blank" rel="noopener">نسخه انگلیسی پروژه کوکی</a>.
+      <br>مشاهده <a href="https://github.com/Kuberwastaken/cookie" target="_blank" rel="noopener">نسخه انگلیسی پروژه کوکی</a>
+      <br><br><br>این ترجمه را دوست داشتید؟ <a href="https://docs.watchat.c0s.me" target="_blank" rel="noopener">مشاهده سایر پروژه های C0S</a>.
     </p>
   `);
 

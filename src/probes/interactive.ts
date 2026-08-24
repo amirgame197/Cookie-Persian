@@ -247,13 +247,13 @@ export function analyzeTyping(events: KeyEvent[], target: string, typed: string)
   }
 
   return [
-    sig('key.wpm', 'Typing speed (wpm)', wpm, { entropy: 2 }),
-    sig('key.meanDwell', 'Mean key-hold (ms)', Math.round(meanDwell), { entropy: 2 }),
-    sig('key.meanFlight', 'Mean between-key (ms)', Math.round(meanFlight), { entropy: 2 }),
-    sig('key.rhythmCv', 'Rhythm variability', +flightCv.toFixed(2), { entropy: 2 }),
-    sig('key.corrections', 'Corrections while typing', corrections),
-    sig('key.count', 'Keystrokes analysed', chars.length),
-    sig('key.digraphs', 'Digraph latency profile', digraphs),
+    sig('key.wpm', 'سرعت تایپ (کلمه در دقیقه)', wpm, { entropy: 2 }),
+    sig('key.meanDwell', 'میانگین زمان نگه داشتن دکمه (میلی ثانیه)', Math.round(meanDwell), { entropy: 2 }),
+    sig('key.meanFlight', 'میانگین فاصله زمانی بین دکمه ها (میلی ثانیه)', Math.round(meanFlight), { entropy: 2 }),
+    sig('key.rhythmCv', 'تغییرپذیری ریتم', +flightCv.toFixed(2), { entropy: 2 }),
+    sig('key.corrections', 'اصلاحات هنگام تایپ', corrections),
+    sig('key.count', 'تعداد دکمه های تحلیل شده', chars.length),
+    sig('key.digraphs', 'الگوی تاخیر بین جفت دکمه ها', digraphs),
   ];
 }
 
