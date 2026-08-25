@@ -147,4 +147,5 @@
 - هرگز یک ادعای `certain` را از سیگنال با درجه `guess` ارائه ندهید.
 
 <br>
+
 ##### This section is translated by AI.
